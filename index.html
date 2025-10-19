@@ -111,6 +111,10 @@
             padding: 10px;
             flex-grow: 1;
         }
+         #frame2 h1 {
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+        }
         #calendar-header {
             width: 100%;
             text-align: center;
@@ -130,6 +134,8 @@
             grid-template-columns: repeat(7, 1fr);
             width: 100%;
             flex-grow: 1;
+            border-radius: 8px;
+            overflow: hidden;
         }
         .calendar-day-name {
             font-size: 0.8rem;
@@ -313,6 +319,13 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             text-align: center;
             animation: popup-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            max-height: 84%;
+        }
+        .popup-content-scrollable {
+            overflow-y: auto;
+            padding-right: 10px; /* For scrollbar */
         }
         @keyframes popup-in {
             from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
@@ -321,6 +334,7 @@
         .popup h2 {
             font-size: 1.4rem;
             margin-top: 0;
+            flex-shrink: 0;
         }
         .close-btn {
             position: absolute;
@@ -335,14 +349,40 @@
             width: 60px;
             height: 60px;
             margin: 15px auto;
+            flex-shrink: 0;
         }
         .popup-details {
             font-size: 1rem;
             line-height: 1.7;
             margin-top: 15px;
+            margin-bottom: 20px;
         }
         .hidden {
             display: none;
+        }
+        
+        /* Frame4 specific styles */
+        .transport-info {
+            width: 85%;
+            margin: 20px auto 0 auto;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .transport-info h2 { font-size: 1rem; }
+        .transport-info h3 { font-size: 0.9rem; color: #333; margin-top: 15px; }
+        .transport-info p { margin: 5px 0; font-size: 0.85rem; }
+        .transport-info u { color: var(--secondary-color); }
+        
+        /* Frame5 specific styles */
+        #frame5 p {
+            margin: 15px 0;
+        }
+        #close-failure-btn {
+            cursor: pointer;
+            padding: 10px 20px;
         }
         
     </style>
@@ -360,6 +400,7 @@
 
         <!-- Frame 2: カレンダー画面 -->
         <div id="frame2" class="frame">
+            <h1>来場希望日</h1>
             <h2 id="calendar-header"></h2>
             <div id="calendar-day-names-grid"></div>
             <div id="calendar-grid"></div>
@@ -407,15 +448,29 @@
     <div id="frame4" class="popup hidden">
         <span class="close-btn">&times;</span>
         <h2>来場日時が<br>設定されました</h2>
-        <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><circle cx="12" cy="16" r="4"></circle><polyline points="12 14 12 16 14 16"></polyline></svg>
-        <div id="success-details" class="popup-details"></div>
+        <div class="popup-content-scrollable">
+            <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><circle cx="12" cy="16" r="4"></circle><polyline points="12 14 12 16 14 16"></polyline></svg>
+            <div id="success-details" class="popup-details"></div>
+            <div class="transport-info">
+                <h2>会場への交通手段について事前予約が必要なものがあります。<br>以下よりご確認ください。</h2>
+                <h3>＜東ゲートから入場となる交通手段＞</h3>
+                <p>■地下鉄</p>
+                <p>事前予約は必要ありません。</p>
+                <p><u>経路検索はこちら</u></p>
+                <br>
+                <p>■自転車・障がい者用駐車場</p>
+                <p>前日までに駐輪場や駐車場の予約が必要です。</p>
+                <p><u>空き状況確認、事前予約はこちら</u></p>
+            </div>
+        </div>
     </div>
 
     <!-- Frame 5: 失敗ポップアップ -->
     <div id="frame5" class="popup hidden">
         <span class="close-btn">&times;</span>
-        <h2>予約をとれませんでした</h2>
-        <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
+        <h2>定員を超えたため、ご希望<br>の時間帯は選択できませんでした</h2>
+        <p>お手数ですが、来場日時を再度選択し<br>てください。</p>
+        <div id="close-failure-btn"><u>とじる</u></div>
     </div>
 
     <script>
@@ -453,6 +508,7 @@
                 successPopup: document.getElementById('frame4'),
                 failurePopup: document.getElementById('frame5'),
                 successDetails: document.getElementById('success-details'),
+                closeFailureBtn: document.getElementById('close-failure-btn'),
             },
 
             // 初期化処理
@@ -478,10 +534,16 @@
                     this.hidePopups();
                     this.navigateTo('frame1');
                 });
-                this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', () => {
+                
+                const closeFailurePopup = () => {
                     this.hidePopups();
-                    // 失敗時はカレンダーに戻る
-                });
+                    this.buildCalendar();
+                    this.navigateTo('frame2');
+                };
+                
+                this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', closeFailurePopup);
+                this.elements.closeFailureBtn.addEventListener('click', closeFailurePopup);
+
                 this.elements.overlay.addEventListener('click', () => this.hidePopups());
             },
 
@@ -621,20 +683,32 @@
             getRandomTimeSlotLevel(timeIndex) {
                 const { difficulty } = this.state;
                 const baseProbs = {
-                    Easy:   { blue: 0.55, red: 0.17, yellow: 0.28 },
-                    Normal: { blue: 0.16, red: 0.10, yellow: 0.74 },
-                    Hard:   { blue: 0.00, red: 0.99, yellow: 0.01 },
+                    Easy:   { blue: 0.05, red: 0.17 }, // yellow is calculated
+                    Normal: { blue: 0.16, red: 0.40 }, // yellow is calculated
+                    Hard:   { blue: 0.00, red: 0.99, yellow: 0.01 }, // special case
                 };
 
                 const probSet = baseProbs[difficulty];
-                let blueProb = probSet.blue + 0.02 * timeIndex;
-                let redProb = probSet.red - 0.02 * timeIndex;
+                let blueProb, redProb, yellowProb;
 
-                blueProb = Math.max(0, Math.min(1, blueProb));
-                redProb = Math.max(0, Math.min(1, redProb));
+                if (difficulty === 'Hard') {
+                    yellowProb = probSet.yellow + 0.005 * timeIndex;
+                    redProb = probSet.red - 0.005 * timeIndex;
+                    
+                    yellowProb = Math.max(0, Math.min(1, yellowProb));
+                    redProb = Math.max(0, Math.min(1, redProb));
+                    blueProb = 1 - yellowProb - redProb;
+                } else {
+                    blueProb = probSet.blue + 0.005 * timeIndex;
+                    redProb = probSet.red - 0.005 * timeIndex;
+                   
+                    blueProb = Math.max(0, Math.min(1, blueProb));
+                    redProb = Math.max(0, Math.min(1, redProb));
+                    yellowProb = 1 - blueProb - redProb;
+                }
                 
-                const yellowProb = 1 - blueProb - redProb;
-
+                yellowProb = Math.max(0, yellowProb);
+                
                 const rand = Math.random();
                 if (rand < blueProb) return 'available';
                 if (rand < blueProb + yellowProb) return 'congested';
@@ -770,5 +844,4 @@
     </script>
 </body>
 </html>
-
 
