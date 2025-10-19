@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万博予約ゲーム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基本スタイル */
+        :root {
+            --primary-color: #e6002d;
+            --secondary-color: #006ab3;
+            --highlight-color: #ffc0cb; /* ピンク */
+            --light-gray: #f0f0f0;
+            --dark-gray: #888;
+            --font-label: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            --font-main: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent; /* スマホのタップ時のハイライトを消す */
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 480px;
+            height: 90vh;
+            max-height: 800px;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .frame {
+            display: none;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-in-out;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .frame.active {
+            display: flex;
+            height: 100%;
+        }
+
+        #frame1 {
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ヘッダー */
+        .app-header {
+            font-family: var(--font-label);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            padding: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ボタン */
+        .btn {
+            font-family: var(--font-main);
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-easy { background-color: #4CAF50; color: white; }
+        .btn-normal { background-color: #FFC107; color: #333; }
+        .btn-hard { background-color: #F44336; color: white; }
+        
+        /* Frame2: カレンダー */
+        #frame2 {
+            padding: 10px;
+            flex-grow: 1;
+        }
+        #calendar-header {
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        #calendar-day-names-grid {
+             display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            width: 100%;
+        }
+        #calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            width: 100%;
+            flex-grow: 1;
+        }
+        .calendar-day-name {
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 8px 0;
+            font-weight: bold;
+        }
+        .day-name-sun { color: red; }
+        .day-name-sat { color: blue; }
+
+        .calendar-date {
+            padding: 2px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            border-right: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .calendar-date:nth-child(7n) { border-right: none; }
+        
+        .date-number {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .date-sun { color: red; }
+        .date-sat { color: blue; }
+        
+        .other-month .date-number {
+            color: #ccc;
+        }
+        .calendar-date.other-month {
+            cursor: default;
+        }
+
+        .calendar-date:not(.other-month):hover {
+            background-color: #f0f8ff;
+        }
+        
+        .calendar-date.selected {
+            background-color: var(--highlight-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .crowd-icon {
+            width: 80%;
+            height: auto;
+            margin-top: 4px;
+            flex-grow: 1;
+            object-fit: contain;
+        }
+        .crowd-icon.placeholder {
+            background-color: #e0e0e0;
+            width: 70%;
+            height: 30%;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        /* Frame3: 時間選択 */
+        #frame3-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .back-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 15px;
+            color: #555;
+        }
+
+        #time-selection-table {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .gate-column {
+            width: 48%;
+            text-align: center;
+        }
+        .gate-header {
+            margin-bottom: 10px;
+        }
+        .gate-header h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+        }
+        .gate-header p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #555;
+            min-height: 2.2em;
+        }
+        .time-slot {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .time-slot.selected {
+            background-color: var(--highlight-color);
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+        .time-slot .crowd-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .info-label {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+        .info-transport {
+            background-color: var(--light-gray);
+            font-weight: bold;
+        }
+        .info-selection {
+            background-color: var(--highlight-color);
+            line-height: 1.6;
+            visibility: hidden;
+        }
+        .info-selection.visible {
+            visibility: visible;
+        }
+        
+        .btn-confirm {
+            background-color: var(--primary-color);
+            color: white;
+            width: 100%;
+            padding: 18px;
+        }
+        
+        /* ポップアップ */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 20;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: popup-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popup-in {
+            from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        .popup h2 {
+            font-size: 1.4rem;
+            margin-top: 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #aaa;
+            line-height: 1;
+        }
+        .popup-icon {
+            width: 60px;
+            height: 60px;
+            margin: 15px auto;
+        }
+        .popup-details {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+        .hidden {
+            display: none;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- Frame 1: 難易度選択画面 -->
+        <div id="frame1" class="frame active">
+            <h1 class="app-header">万博予約ゲーム</h1>
+            <button id="btn-easy" class="btn btn-easy">Easy</button>
+            <button id="btn-normal" class="btn btn-normal">Normal</button>
+            <button id="btn-hard" class="btn btn-hard">Hard</button>
+        </div>
+
+        <!-- Frame 2: カレンダー画面 -->
+        <div id="frame2" class="frame">
+            <h2 id="calendar-header"></h2>
+            <div id="calendar-day-names-grid"></div>
+            <div id="calendar-grid"></div>
+        </div>
+
+        <!-- Frame 3: 時間選択画面 -->
+        <div id="frame3" class="frame">
+            <div id="frame3-header">
+                <div id="back-to-calendar-btn" class="back-btn">&lt;</div>
+            </div>
+            <div id="time-selection-table">
+                <div class="gate-column">
+                    <div class="gate-header">
+                        <h3>東ゲート</h3>
+                        <p>地下鉄・自転車・障がい者用駐車場</p>
+                    </div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="0"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="1"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="2"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="3"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="4"></div>
+                </div>
+                <div class="gate-column">
+                    <div class="gate-header">
+                        <h3>西ゲート</h3>
+                        <p>シャトルバス・タクシー</p>
+                    </div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="0"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="1"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="2"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="3"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="4"></div>
+                </div>
+            </div>
+            <div class="info-label info-transport"><u>会場への交通手段の手順はこちら</u></div>
+            <div id="selection-summary" class="info-label info-selection"></div>
+            <button id="btn-confirm" class="btn btn-confirm">来場日時を設定する</button>
+        </div>
+    </div>
+
+    <!-- ポップアップ -->
+    <div id="overlay" class="hidden"></div>
+
+    <!-- Frame 4: 成功ポップアップ -->
+    <div id="frame4" class="popup hidden">
+        <span class="close-btn">&times;</span>
+        <h2>来場日時が<br>設定されました</h2>
+        <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><circle cx="12" cy="16" r="4"></circle><polyline points="12 14 12 16 14 16"></polyline></svg>
+        <div id="success-details" class="popup-details"></div>
+    </div>
+
+    <!-- Frame 5: 失敗ポップアップ -->
+    <div id="frame5" class="popup hidden">
+        <span class="close-btn">&times;</span>
+        <h2>予約をとれませんでした</h2>
+        <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
+    </div>
+
+    <script>
+        const App = {
+            // アプリケーションの状態を管理
+            state: {
+                difficulty: null,
+                year: 2025,
+                month: null,
+                selectedDate: null,
+                dailyTimeSlotData: {}, // { 'YYYY-MM-DD': { east: [level, ...], west: [level, ...] } }
+                selectedTimeSlot: null,
+            },
+
+            // 定数
+            constants: {
+                timeStrings: ['9:00', '10:00', '11:00', '12:00', '17:00'],
+                iconImages: {}, // 画像パスを格納
+            },
+
+            // 要素の参照をキャッシュ
+            elements: {
+                frames: document.querySelectorAll('.frame'),
+                btnEasy: document.getElementById('btn-easy'),
+                btnNormal: document.getElementById('btn-normal'),
+                btnHard: document.getElementById('btn-hard'),
+                calendarHeader: document.getElementById('calendar-header'),
+                calendarDayNamesGrid: document.getElementById('calendar-day-names-grid'),
+                calendarGrid: document.getElementById('calendar-grid'),
+                backToCalendarBtn: document.getElementById('back-to-calendar-btn'),
+                timeSlots: document.querySelectorAll('.time-slot'),
+                selectionSummary: document.getElementById('selection-summary'),
+                btnConfirm: document.getElementById('btn-confirm'),
+                overlay: document.getElementById('overlay'),
+                successPopup: document.getElementById('frame4'),
+                failurePopup: document.getElementById('frame5'),
+                successDetails: document.getElementById('success-details'),
+            },
+
+            // 初期化処理
+            init() {
+                this.loadIconImagePaths();
+                this.setupEventListeners();
+            },
+
+            // イベントリスナーを設定
+            setupEventListeners() {
+                this.elements.btnEasy.addEventListener('click', () => this.startGame('Easy'));
+                this.elements.btnNormal.addEventListener('click', () => this.startGame('Normal'));
+                this.elements.btnHard.addEventListener('click', () => this.startGame('Hard'));
+                this.elements.backToCalendarBtn.addEventListener('click', () => this.navigateTo('frame2'));
+
+                this.elements.timeSlots.forEach(slot => {
+                    slot.addEventListener('click', () => this.selectTimeSlot(slot));
+                });
+                
+                this.elements.btnConfirm.addEventListener('click', () => this.confirmBooking());
+                
+                this.elements.successPopup.querySelector('.close-btn').addEventListener('click', () => {
+                    this.hidePopups();
+                    this.navigateTo('frame1');
+                });
+                this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', () => {
+                    this.hidePopups();
+                    // 失敗時はカレンダーに戻る
+                });
+                this.elements.overlay.addEventListener('click', () => this.hidePopups());
+            },
+
+            // ゲーム開始
+            startGame(difficulty) {
+                this.state.difficulty = difficulty;
+                this.state.dailyTimeSlotData = {}; // データをリセット
+                
+                const monthMap = { 'Easy': 3, 'Normal': 8, 'Hard': 9 }; // 0-indexed month
+                this.state.month = monthMap[difficulty];
+                
+                this.buildCalendar();
+                this.navigateTo('frame2');
+            },
+
+            // 画面遷移
+            navigateTo(frameId) {
+                this.elements.frames.forEach(frame => {
+                    frame.classList.toggle('active', frame.id === frameId);
+                });
+            },
+            
+            // カレンダー構築
+            buildCalendar() {
+                this.elements.calendarHeader.textContent = `${this.state.year}年${this.state.month + 1}月`;
+                this.buildCalendarDayNames();
+                this.populateCalendarGrid();
+            },
+            
+            buildCalendarDayNames() {
+                this.elements.calendarDayNamesGrid.innerHTML = '';
+                const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+                const dayClasses = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                dayNames.forEach((name, i) => {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = `calendar-day-name day-name-${dayClasses[i]}`;
+                    dayEl.textContent = name;
+                    this.elements.calendarDayNamesGrid.appendChild(dayEl);
+                });
+            },
+            
+            populateCalendarGrid() {
+                this.elements.calendarGrid.innerHTML = '';
+                const { year, month } = this.state;
+                
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
+                
+                let date = 1;
+                for (let i = 0; i < 5 * 7; i++) { // 5行 x 7列
+                    const cell = document.createElement('div');
+                    cell.className = 'calendar-date';
+                    
+                    if (i < firstDay) {
+                        cell.classList.add('other-month');
+                        const prevMonthDate = daysInPrevMonth - firstDay + i + 1;
+                        cell.innerHTML = `<span class="date-number">${prevMonthDate}</span>`;
+                    } else if (date > daysInMonth) {
+                        cell.classList.add('other-month');
+                        const nextMonthDate = date - daysInMonth;
+                        cell.innerHTML = `<span class="date-number">${nextMonthDate}</span>`;
+                        date++;
+                    } else {
+                        const currentDate = new Date(year, month, date);
+                        cell.dataset.date = currentDate.toISOString().split('T')[0];
+                        
+                        const dateNumber = document.createElement('span');
+                        dateNumber.className = 'date-number';
+                        dateNumber.textContent = date;
+                        cell.appendChild(dateNumber);
+
+                        if (currentDate.getDay() === 0 || this.isHoliday(year, month + 1, date)) {
+                            dateNumber.classList.add('date-sun');
+                        } else if (currentDate.getDay() === 6) {
+                            dateNumber.classList.add('date-sat');
+                        }
+
+                        const iconContainer = this.getDailyCrowdIcon(year, month + 1, date);
+                        cell.appendChild(iconContainer);
+
+                        cell.addEventListener('click', () => {
+                          if (!cell.querySelector('.placeholder')) {
+                            this.selectDate(cell);
+                          }
+                        });
+                        date++;
+                    }
+                    this.elements.calendarGrid.appendChild(cell);
+                }
+            },
+            
+            isHoliday(year, month, day) {
+                if (year !== 2025) return false;
+                const holidays = { 4: [29], 5: [3], 9: [15, 23], 10: [13] };
+                return holidays[month] && holidays[month].includes(day);
+            },
+            
+            getDailyCrowdIcon(year, month, day) {
+                const { difficulty } = this.state;
+                let showIcon = false;
+                if (difficulty === 'Easy' && month === 4 && day >= 13) showIcon = true;
+                if (difficulty === 'Normal' && month === 9) showIcon = true;
+                if (difficulty === 'Hard' && month === 10 && day <= 13) showIcon = true;
+                
+                const iconEl = document.createElement('img');
+                iconEl.className = 'crowd-icon';
+                
+                if (!showIcon) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'crowd-icon placeholder';
+                    return placeholder;
+                }
+
+                const dateStr = new Date(year, month - 1, day).toISOString().split('T')[0];
+                const dailyTimeSlotData = this.generateDailyTimeSlotData();
+                this.state.dailyTimeSlotData[dateStr] = dailyTimeSlotData;
+
+                const dayLevel = this.determineDayLevel(dailyTimeSlotData);
+                
+                if (dayLevel === 'full') iconEl.src = this.constants.iconImages.red;
+                else if (dayLevel === 'available') iconEl.src = this.constants.iconImages.blue;
+                else iconEl.src = this.constants.iconImages.yellow;
+
+                return iconEl;
+            },
+
+            generateDailyTimeSlotData() {
+                const data = { east: [], west: [] };
+                for (let i = 0; i < 5; i++) {
+                    data.east.push(this.getRandomTimeSlotLevel(i));
+                    data.west.push(this.getRandomTimeSlotLevel(i));
+                }
+                return data;
+            },
+
+            getRandomTimeSlotLevel(timeIndex) {
+                const { difficulty } = this.state;
+                const baseProbs = {
+                    Easy:   { blue: 0.55, red: 0.17, yellow: 0.28 },
+                    Normal: { blue: 0.16, red: 0.10, yellow: 0.74 },
+                    Hard:   { blue: 0.00, red: 0.99, yellow: 0.01 },
+                };
+
+                const probSet = baseProbs[difficulty];
+                let blueProb = probSet.blue + 0.02 * timeIndex;
+                let redProb = probSet.red - 0.02 * timeIndex;
+
+                blueProb = Math.max(0, Math.min(1, blueProb));
+                redProb = Math.max(0, Math.min(1, redProb));
+                
+                const yellowProb = 1 - blueProb - redProb;
+
+                const rand = Math.random();
+                if (rand < blueProb) return 'available';
+                if (rand < blueProb + yellowProb) return 'congested';
+                return 'full';
+            },
+            
+            determineDayLevel(dailyData) {
+                const allLevels = [...dailyData.east, ...dailyData.west];
+                const redCount = allLevels.filter(l => l === 'full').length;
+                if (redCount >= 5) return 'full'; // 半分以上が赤なら赤
+
+                const blueCount = allLevels.filter(l => l === 'available').length;
+                if (blueCount > 0) return 'available'; // 1つでも青があれば青
+
+                return 'congested'; // それ以外は黄色
+            },
+            
+            selectDate(cell) {
+                if (this.state.selectedDate) {
+                    this.state.selectedDate.classList.remove('selected');
+                }
+                cell.classList.add('selected');
+                this.state.selectedDate = cell;
+                
+                if (this.state.selectedTimeSlot) {
+                    this.state.selectedTimeSlot.classList.remove('selected');
+                    this.state.selectedTimeSlot = null;
+                }
+
+                this.populateTimeSlots();
+                this.elements.selectionSummary.classList.remove('visible');
+                this.navigateTo('frame3');
+            },
+
+            populateTimeSlots() {
+                const dateStr = this.state.selectedDate.dataset.date;
+                const dailyData = this.state.dailyTimeSlotData[dateStr];
+
+                this.elements.timeSlots.forEach(slot => {
+                    const gate = slot.dataset.gate === '東ゲート' ? 'east' : 'west';
+                    const timeIndex = parseInt(slot.dataset.timeIndex, 10);
+                    const level = dailyData[gate][timeIndex];
+                    const time = this.constants.timeStrings[timeIndex];
+
+                    slot.dataset.level = level;
+                    
+                    let iconSrc = '';
+                    if (level === 'available') iconSrc = this.constants.iconImages.blue;
+                    else if (level === 'congested') iconSrc = this.constants.iconImages.yellow;
+                    else if (level === 'full') iconSrc = this.constants.iconImages.red;
+                    
+                    slot.innerHTML = `
+                        <img src="${iconSrc}" class="crowd-icon" alt="${level}">
+                        <span>${time}-</span>
+                    `;
+                });
+            },
+            
+            selectTimeSlot(slot) {
+                if (this.state.selectedTimeSlot) {
+                    this.state.selectedTimeSlot.classList.remove('selected');
+                }
+                slot.classList.add('selected');
+                this.state.selectedTimeSlot = slot;
+                this.updateSelectionSummary();
+                this.elements.selectionSummary.classList.add('visible');
+            },
+            
+            updateSelectionSummary() {
+                if (!this.state.selectedDate || !this.state.selectedTimeSlot) return;
+
+                const date = new Date(this.state.selectedDate.dataset.date);
+                date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // UTC to local
+                const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+                const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日(${dayOfWeekStr})`;
+
+                const timeIndex = this.state.selectedTimeSlot.dataset.timeIndex;
+                const time = this.constants.timeStrings[timeIndex];
+                const gate = this.state.selectedTimeSlot.dataset.gate;
+                
+                this.elements.selectionSummary.innerHTML = `
+                    来場日時: ${dateStr} ${time}-<br>
+                    枚数: 1枚<br>
+                    【${gate}】
+                `;
+            },
+            
+            confirmBooking() {
+                if (!this.state.selectedTimeSlot) {
+                    alert('時間を選択してください。');
+                    return;
+                }
+                
+                const crowdLevel = this.state.selectedTimeSlot.dataset.level;
+                const successRates = {
+                    available: 0.75,
+                    congested: this.state.difficulty === 'Hard' ? 0.01 : 0.20,
+                    full: this.state.difficulty === 'Hard' ? 0.0001 : 0.05,
+                };
+                
+                const success = Math.random() < (successRates[crowdLevel] || 0);
+                
+                if (success) this.showSuccessPopup();
+                else this.showFailurePopup();
+            },
+            
+            showSuccessPopup() {
+                this.elements.successDetails.innerHTML = this.elements.selectionSummary.innerHTML;
+                this.elements.successPopup.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+            showFailurePopup() {
+                this.elements.failurePopup.classList.remove('hidden');
+                this.elements.overlay.classList.remove('hidden');
+            },
+            hidePopups() {
+                this.elements.successPopup.classList.add('hidden');
+                this.elements.failurePopup.classList.add('hidden');
+                this.elements.overlay.classList.add('hidden');
+            },
+
+            // 画像のパスを読み込む
+            loadIconImagePaths() {
+                this.constants.iconImages = {
+                    blue: 'blue.png',
+                    yellow: 'yellow.png',
+                    red: 'red.png'
+                };
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
+</body>
+</html>
+
+
