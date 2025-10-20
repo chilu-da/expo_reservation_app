@@ -200,6 +200,12 @@
         }
 
         /* Frame3: 時間選択 */
+        #frame3-scroll-container {
+            overflow-y: auto;
+            width: 100%;
+            flex-grow: 1;
+        }
+
         #frame3-header {
             display: flex;
             align-items: center;
@@ -411,32 +417,34 @@
             <div id="frame3-header">
                 <div id="back-to-calendar-btn" class="back-btn">&lt;</div>
             </div>
-            <div id="time-selection-table">
-                <div class="gate-column">
-                    <div class="gate-header">
-                        <h3>東ゲート</h3>
-                        <p>地下鉄・自転車・障がい者用駐車場</p>
+            <div id="frame3-scroll-container">
+                <div id="time-selection-table">
+                    <div class="gate-column">
+                        <div class="gate-header">
+                            <h3>東ゲート</h3>
+                            <p>地下鉄・自転車・障がい者用駐車場</p>
+                        </div>
+                        <div class="time-slot" data-gate="東ゲート" data-time-index="0"></div>
+                        <div class="time-slot" data-gate="東ゲート" data-time-index="1"></div>
+                        <div class="time-slot" data-gate="東ゲート" data-time-index="2"></div>
+                        <div class="time-slot" data-gate="東ゲート" data-time-index="3"></div>
+                        <div class="time-slot" data-gate="東ゲート" data-time-index="4"></div>
                     </div>
-                    <div class="time-slot" data-gate="東ゲート" data-time-index="0"></div>
-                    <div class="time-slot" data-gate="東ゲート" data-time-index="1"></div>
-                    <div class="time-slot" data-gate="東ゲート" data-time-index="2"></div>
-                    <div class="time-slot" data-gate="東ゲート" data-time-index="3"></div>
-                    <div class="time-slot" data-gate="東ゲート" data-time-index="4"></div>
-                </div>
-                <div class="gate-column">
-                    <div class="gate-header">
-                        <h3>西ゲート</h3>
-                        <p>シャトルバス・タクシー</p>
+                    <div class="gate-column">
+                        <div class="gate-header">
+                            <h3>西ゲート</h3>
+                            <p>シャトルバス・タクシー</p>
+                        </div>
+                        <div class="time-slot" data-gate="西ゲート" data-time-index="0"></div>
+                        <div class="time-slot" data-gate="西ゲート" data-time-index="1"></div>
+                        <div class="time-slot" data-gate="西ゲート" data-time-index="2"></div>
+                        <div class="time-slot" data-gate="西ゲート" data-time-index="3"></div>
+                        <div class="time-slot" data-gate="西ゲート" data-time-index="4"></div>
                     </div>
-                    <div class="time-slot" data-gate="西ゲート" data-time-index="0"></div>
-                    <div class="time-slot" data-gate="西ゲート" data-time-index="1"></div>
-                    <div class="time-slot" data-gate="西ゲート" data-time-index="2"></div>
-                    <div class="time-slot" data-gate="西ゲート" data-time-index="3"></div>
-                    <div class="time-slot" data-gate="西ゲート" data-time-index="4"></div>
                 </div>
+                <div class="info-label info-transport"><u>会場への交通手段の手順はこちら</u></div>
+                <div id="selection-summary" class="info-label info-selection"></div>
             </div>
-            <div class="info-label info-transport"><u>会場への交通手段の手順はこちら</u></div>
-            <div id="selection-summary" class="info-label info-selection"></div>
             <button id="btn-confirm" class="btn btn-confirm">来場日時を設定する</button>
         </div>
     </div>
@@ -844,4 +852,3 @@
     </script>
 </body>
 </html>
-
