@@ -389,6 +389,7 @@
         #close-failure-btn {
             cursor: pointer;
             padding: 10px 20px;
+            border: 1px solid black;
         }
         
     </style>
@@ -592,7 +593,7 @@
                     this.elements.calendarDayNamesGrid.appendChild(dayEl);
                 });
             },
-            
+
             populateCalendarGrid() {
                 this.elements.calendarGrid.innerHTML = '';
                 const { year, month } = this.state;
