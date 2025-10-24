@@ -582,7 +582,7 @@
                     this.hidePopups();
                     // buildCalendar() は呼び出さない (人型マーク更新をしないため)
                     this.navigateTo('frame2');
-                    this.restoreTimeSlotSelection(); // 選択状態を復元
+                    // restoreTimeSlotSelection() は不要
                 };
                 
                 this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', closeFailurePopup);
@@ -791,21 +791,19 @@
                 this.state.selectedDateElement = cell;
                 this.state.selectedDateStr = cell.dataset.date;
                 
-                // 他の日を選択したら時間選択をリセット
-                if (this.state.selectedTimeSlotElement) {
-                    this.state.selectedTimeSlotElement.classList.remove('selected');
-                    this.state.selectedTimeSlotElement = null;
-                    this.state.selectedTimeSlotData = null;
-                }
-                this.elements.selectionSummary.classList.remove('visible');
+                // 他の日を選択しても時間選択はリセットしない
 
                 this.populateTimeSlots();
+                this.updateSelectionSummary(); // 時間スロット描画後にサマリーを更新
                 this.navigateTo('frame3');
             },
 
             populateTimeSlots() {
                 const dateStr = this.state.selectedDateStr;
                 const dailyData = this.state.dailyTimeSlotData[dateStr];
+                
+                // 時間スロットのDOM参照をリセット
+                this.state.selectedTimeSlotElement = null;
 
                 this.elements.timeSlots.forEach(slot => {
                     const gateKey = slot.dataset.gate === '東ゲート' ? 'east' : 'west';
@@ -825,15 +823,17 @@
                         <span>${time}-</span>
                     `;
 
-                    // 以前選択されていた時間スロットがあれば、再度選択状態にする
+                    // 保持している時間選択データ（ゲートと時間）が一致するかチェック
                     if (this.state.selectedTimeSlotData &&
                         this.state.selectedTimeSlotData.gate === slot.dataset.gate &&
                         this.state.selectedTimeSlotData.timeIndex === timeIndex) {
                         
                         slot.classList.add('selected');
-                        this.state.selectedTimeSlotElement = slot;
-                        this.updateSelectionSummary();
-                        this.elements.selectionSummary.classList.add('visible');
+                        this.state.selectedTimeSlotElement = slot; // DOM参照を更新
+                        
+                        // ★重要: 選択状態のlevelを、今見ている新しい日付のlevelに更新する
+                        this.state.selectedTimeSlotData.level = level; 
+                        
                     } else {
                         slot.classList.remove('selected');
                     }
@@ -856,6 +856,7 @@
             },
             
             updateSelectionSummary() {
+                // 選択データが存在する場合のみサマリーを更新・表示
                 if (!this.state.selectedDateStr || !this.state.selectedTimeSlotData) {
                     this.elements.selectionSummary.classList.remove('visible');
                     return;
@@ -912,22 +913,7 @@
             },
 
             // 失敗ポップアップから戻った際に、時間スロットの選択状態を復元する
-            restoreTimeSlotSelection() {
-                if (this.state.selectedDateElement) {
-                    this.state.selectedDateElement.classList.add('selected');
-                }
-                if (this.state.selectedTimeSlotData) {
-                    const { gate, timeIndex } = this.state.selectedTimeSlotData;
-                    const targetSlot = Array.from(this.elements.timeSlots).find(slot => 
-                        slot.dataset.gate === gate && parseInt(slot.dataset.timeIndex, 10) === timeIndex
-                    );
-                    if (targetSlot) {
-                        targetSlot.classList.add('selected');
-                        this.state.selectedTimeSlotElement = targetSlot;
-                    }
-                }
-                this.updateSelectionSummary(); // 選択サマリーも更新して表示
-            },
+            // restoreTimeSlotSelection() は selectDate と populateTimeSlots のロジックに統合されたため削除
 
             // 画像のパスを読み込む
             loadIconImagePaths() {
