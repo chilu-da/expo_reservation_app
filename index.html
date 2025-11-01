@@ -37,8 +37,8 @@
             height: 100vh; /* 縦いっぱいに変更 */
             max-height: none; /* 最大高さを削除 */
             background-color: white;
-            box-shadow: none; /* 影を削除 */
-            border-radius: 0; /* 角丸を削除 */
+            box-shadow: none; 
+            border-radius: 0; 
             overflow: hidden;
             position: relative;
             display: flex;
@@ -377,7 +377,7 @@
             width: 85%;
             max-width: 400px;
             background-color: white;
-            border: 3px solid black; /* 黒い縁取りを3pxに */
+            border: 3px solid black;
             border-radius: 0; /* 角を四角に */
             padding: 20px;
             z-index: 20;
@@ -470,7 +470,7 @@
             <button id="btn-hard" class="btn btn-hard">Hard</button>
             <div class="footer-notes">
                 <p class="disclaimer">このサイトはフェイクです。<br>実際に予約はできません。</p>
-                <p class="copyright">©Chilu-da</p>
+                <p class="copyright">Made by <a href="https://github.com/chilu-da">Chilu-da</a></p>
             </div>
         </div>
 
@@ -478,7 +478,7 @@
 
 <div id="frame2" class="frame">
             <h1>来場希望日</h1>
-            <!-- リセットアイコン (一本の矢印に変更) -->
+            <!-- リセットアイコン -->
             <svg class="settings-icon" id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="23 4 23 10 17 10"></polyline>
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
@@ -660,7 +660,6 @@
 
             // 画面遷移
             navigateTo(frameId) {
-                // アニメーションを削除したため、@keyframes fadeIn は不要
                 this.elements.frames.forEach(frame => {
                     frame.classList.toggle('active', frame.id === frameId);
                 });
