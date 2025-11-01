@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>万博予約ゲーム</title>
+    <title>万博入場予約ゲーム</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -50,7 +50,6 @@
             padding: 20px;
             flex-direction: column;
             align-items: center;
-            animation: fadeIn 0.5s ease-in-out;
             width: 100%;
             box-sizing: border-box;
         }
@@ -62,13 +61,10 @@
 
         #frame1 {
             justify-content: center;
+            position: relative; /* フッター配置のため */
+            padding-bottom: 70px; /* フッターのスペース確保 */
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         /* ヘッダー */
         .app-header {
             font-family: var(--font-label);
@@ -106,11 +102,32 @@
         .btn-normal { background-color: #FFC107; color: #333; }
         .btn-hard { background-color: #F44336; color: white; }
         
+        /* Frame1 フッター */
+        .footer-notes {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            right: 20px;
+            font-size: 0.75rem;
+            color: #777;
+        }
+        .disclaimer {
+            text-align: right;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.7rem;
+        }
+        .copyright {
+            text-align: center;
+            margin: 0;
+        }
+
         /* Frame2: カレンダー */
         #frame2 {
             padding: 10px;
             flex-grow: 1;
-            position: relative; /* 歯車アイコンの配置用 */
+            position: relative; /* アイコンの配置用 */
         }
         #frame2 h1 {
             font-size: 1.4rem;
@@ -203,16 +220,17 @@
         }
         .settings-icon {
             position: absolute;
-            top: 10px;        /* 右上に寄せる */
-            right: 10px;      /* 右上に寄せる */
-            width: 25px;      /* 小さくする */
-            height: 25px;     /* 小さくする */
-            padding: 4px;     /* クリックしやすくする余白 */
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            padding: 4px;
             cursor: pointer;
-            color: #555;
-            fill: #666;       /* SVGの塗り色を指定（必要に応じて調整） */
-            stroke: none;
-            z-index: 50;      /* 他要素より前面に表示 */
+            color: #000; /* 黒色に変更 */
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            z-index: 50;
             box-sizing: content-box;
         }
 
@@ -267,6 +285,9 @@
         .gate-header {
             margin-bottom: 10px;
             flex-shrink: 0;
+            background-color: var(--light-gray); /* 背景をグレーに */
+            padding: 10px 5px;
+            border-radius: 6px;
         }
         .gate-header h3 {
             margin: 0 0 5px 0;
@@ -276,7 +297,7 @@
             margin: 0;
             font-size: 0.75rem;
             color: #555;
-            min-height: 2.2em; /* 高さを揃える */
+            min-height: 2.2em; /* 高さを揃える (東ゲートの2行分) */
         }
         .time-slot {
             display: flex;
@@ -351,13 +372,12 @@
             width: 85%;
             max-width: 400px;
             background-color: white;
-            border: 1px solid black; /* 黒い縁取り */
+            border: 3px solid black; /* 黒い縁取りを3pxに */
             border-radius: 0; /* 角を四角に */
             padding: 20px;
             z-index: 20;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             text-align: center;
-            animation: popup-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             max-height: 84%;
@@ -366,10 +386,6 @@
             overflow-y: auto;
             padding-right: 10px; /* For scrollbar */
             flex-grow: 1;
-        }
-        @keyframes popup-in {
-            from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
         .popup h2 {
             font-size: 1.4rem;
@@ -382,14 +398,15 @@
             right: 15px;
             font-size: 2rem;
             cursor: pointer;
-            color: #aaa;
+            color: #000; /* 黒色に変更 */
             line-height: 1;
         }
         .popup-icon {
-            width: 60px;
-            height: 60px;
+            width: 60px; /* 固定サイズ */
+            height: 60px; /* 固定サイズ */
             margin: 15px auto;
             flex-shrink: 0;
+            object-fit: contain; /* 画像を引き伸ばさない */
         }
         .popup-details {
             font-size: 1rem;
@@ -423,30 +440,52 @@
         #close-failure-btn {
             cursor: pointer;
             padding: 10px 20px;
-            text-decoration: underline;
+            text-decoration: none; /* 下線を削除 */
+            border: 1px solid #333; /* 枠線を追加 */
+            border-radius: 8px; /* 角丸 */
+            display: inline-block; /* 枠線がテキストの周りに来るように */
+            margin-top: 20px;
+            color: #333;
+            font-weight: bold;
         }
-        
+        #close-failure-btn:hover {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
 
     <div id="app-container">
-        <!-- Frame 1: 難易度選択画面 --><div id="frame1" class="frame active">
-            <h1 class="app-header">万博予約ゲーム</h1>
+        
+
+<div id="frame1" class="frame active">
+            <h1 class="app-header">万博入場予約ゲーム</h1>
             <button id="btn-easy" class="btn btn-easy">Easy</button>
             <button id="btn-normal" class="btn btn-normal">Normal</button>
             <button id="btn-hard" class="btn btn-hard">Hard</button>
+            <div class="footer-notes">
+                <p class="disclaimer">このサイトはフェイクサイトです。非公式であり、実際に予約はできません。</p>
+                <p class="copyright">Made by <a href="https://github.com/chilu-da">Chilu-da</a></p>
+            </div>
         </div>
 
-        <!-- Frame 2: カレンダー画面 --><div id="frame2" class="frame">
+        
+
+<div id="frame2" class="frame">
             <h1>来場希望日</h1>
-            <svg class="settings-icon" id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <!-- リセットアイコン (一本の矢印に変更) -->
+            <svg class="settings-icon" id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
             <h2 id="calendar-header"></h2>
             <div id="calendar-day-names-grid"></div>
             <div id="calendar-grid"></div>
         </div>
 
-        <!-- Frame 3: 時間選択画面 --><div id="frame3" class="frame">
+        
+
+<div id="frame3" class="frame">
             <div id="frame3-header">
                 <div id="back-to-calendar-btn" class="back-btn">&lt;</div>
             </div>
@@ -466,7 +505,7 @@
                     <div class="gate-column">
                         <div class="gate-header">
                             <h3>西ゲート</h3>
-                            <p>シャトルバス・タクシー</p>
+                            <p>&nbsp;</p> <!-- 高さを揃えるための空白 -->
                         </div>
                         <div class="time-slot" data-gate="西ゲート" data-time-index="0"></div>
                         <div class="time-slot" data-gate="西ゲート" data-time-index="1"></div>
@@ -482,13 +521,18 @@
         </div>
     </div>
 
-    <!-- ポップアップ --><div id="overlay" class="hidden"></div>
+    
 
-    <!-- Frame 4: 成功ポップアップ --><div id="frame4" class="popup hidden">
+<div id="overlay" class="hidden"></div>
+
+    
+
+<div id="frame4" class="popup hidden">
         <span class="close-btn">&times;</span>
         <h2>来場日時が<br>設定されました</h2>
         <div class="popup-content-scrollable">
-            <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><circle cx="12" cy="16" r="4"></circle><polyline points="12 14 12 16 14 16"></polyline></svg>
+            <!-- カレンダーアイコンを画像に変更 -->
+            <img src="calendar.png" class="popup-icon" alt="カレンダーアイコン">
             <div id="success-details" class="popup-details"></div>
             <div class="transport-info">
                 <h2>会場への交通手段について事前予約が必要なものがあります。<br>以下よりご確認ください。</h2>
@@ -504,7 +548,9 @@
         </div>
     </div>
 
-    <!-- Frame 5: 失敗ポップアップ --><div id="frame5" class="popup hidden">
+    
+
+<div id="frame5" class="popup hidden">
         <span class="close-btn">&times;</span>
         <h2>定員を超えたため、ご希望<br>の時間帯は選択できませんでした</h2>
         <p>お手数ですが、来場日時を再度選択し<br>てください。</p>
@@ -563,7 +609,7 @@
                 this.elements.btnEasy.addEventListener('click', () => this.startGame('Easy'));
                 this.elements.btnNormal.addEventListener('click', () => this.startGame('Normal'));
                 this.elements.btnHard.addEventListener('click', () => this.startGame('Hard'));
-                this.elements.settingsIcon.addEventListener('click', () => this.navigateTo('frame1')); // 歯車アイコン
+                this.elements.settingsIcon.addEventListener('click', () => this.navigateTo('frame1')); // リセットアイコン
 
                 this.elements.backToCalendarBtn.addEventListener('click', () => this.navigateTo('frame2'));
 
@@ -582,7 +628,7 @@
                     this.hidePopups();
                     // buildCalendar() は呼び出さない (人型マーク更新をしないため)
                     this.navigateTo('frame2');
-                    // restoreTimeSlotSelection() は不要
+                    // ここではselectedTimeSlotDataはリセットしない（要件通り）
                 };
                 
                 this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', closeFailurePopup);
@@ -598,7 +644,7 @@
                 this.state.selectedDateElement = null; // 選択状態をリセット
                 this.state.selectedDateStr = null;
                 this.state.selectedTimeSlotElement = null;
-                this.state.selectedTimeSlotData = null;
+                this.state.selectedTimeSlotData = null; // 難易度変更時は時間選択もリセット
                 
                 const monthMap = { 'Easy': 3, 'Normal': 8, 'Hard': 9 }; // 0-indexed month
                 this.state.month = monthMap[difficulty];
@@ -609,6 +655,7 @@
 
             // 画面遷移
             navigateTo(frameId) {
+                // アニメーションを削除したため、@keyframes fadeIn は不要
                 this.elements.frames.forEach(frame => {
                     frame.classList.toggle('active', frame.id === frameId);
                 });
@@ -791,8 +838,6 @@
                 this.state.selectedDateElement = cell;
                 this.state.selectedDateStr = cell.dataset.date;
                 
-                // 他の日を選択しても時間選択はリセットしない
-
                 this.populateTimeSlots();
                 this.updateSelectionSummary(); // 時間スロット描画後にサマリーを更新
                 this.navigateTo('frame3');
@@ -802,8 +847,10 @@
                 const dateStr = this.state.selectedDateStr;
                 const dailyData = this.state.dailyTimeSlotData[dateStr];
                 
-                // 時間スロットのDOM参照をリセット
+                // 現在の選択状態をクリア
+                this.elements.timeSlots.forEach(slot => slot.classList.remove('selected'));
                 this.state.selectedTimeSlotElement = null;
+
 
                 this.elements.timeSlots.forEach(slot => {
                     const gateKey = slot.dataset.gate === '東ゲート' ? 'east' : 'west';
@@ -823,27 +870,28 @@
                         <span>${time}-</span>
                     `;
 
-                    // 保持している時間選択データ（ゲートと時間）が一致するかチェック
+                    // 以前選択されていた時間スロットデータが残っていて、それが現在のスロットと一致する場合
                     if (this.state.selectedTimeSlotData &&
                         this.state.selectedTimeSlotData.gate === slot.dataset.gate &&
                         this.state.selectedTimeSlotData.timeIndex === timeIndex) {
                         
+                        // このスロットを選択状態にする
                         slot.classList.add('selected');
                         this.state.selectedTimeSlotElement = slot; // DOM参照を更新
                         
-                        // ★重要: 選択状態のlevelを、今見ている新しい日付のlevelに更新する
+                        // 選択状態のlevelを、今見ている新しい日付のlevelに更新する
                         this.state.selectedTimeSlotData.level = level; 
                         
-                    } else {
-                        slot.classList.remove('selected');
                     }
                 });
             },
             
             selectTimeSlot(slot) {
+                // 現在選択されているスロットがあれば解除
                 if (this.state.selectedTimeSlotElement) {
                     this.state.selectedTimeSlotElement.classList.remove('selected');
                 }
+                // 新しいスロットを選択状態にする
                 slot.classList.add('selected');
                 this.state.selectedTimeSlotElement = slot;
                 this.state.selectedTimeSlotData = {
@@ -880,7 +928,8 @@
             
             confirmBooking() {
                 if (!this.state.selectedTimeSlotData) {
-                    alert('時間を選択してください。');
+                    // アラートの代わりにカスタムUIを出すべきだが、仕様にないのでconsole.warn
+                    console.warn('時間を選択してください。');
                     return;
                 }
                 
@@ -911,9 +960,6 @@
                 this.elements.failurePopup.classList.add('hidden');
                 this.elements.overlay.classList.add('hidden');
             },
-
-            // 失敗ポップアップから戻った際に、時間スロットの選択状態を復元する
-            // restoreTimeSlotSelection() は selectDate と populateTimeSlots のロジックに統合されたため削除
 
             // 画像のパスを読み込む
             loadIconImagePaths() {
