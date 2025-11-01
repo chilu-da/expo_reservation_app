@@ -33,12 +33,12 @@
 
         #app-container {
             width: 100%;
-            max-width: 480px;
-            height: 90vh;
-            max-height: 800px;
+            max-width: 480px; /* スマホ幅を維持し、PCでは中央寄せ */
+            height: 100vh; /* 縦いっぱいに変更 */
+            max-height: none; /* 最大高さを削除 */
             background-color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
+            box-shadow: none; /* 影を削除 */
+            border-radius: 0; /* 角丸を削除 */
             overflow: hidden;
             position: relative;
             display: flex;
@@ -65,17 +65,20 @@
             padding-bottom: 70px; /* フッターのスペース確保 */
         }
 
-        /* ヘッダー */
+        /* ヘッダー (元のデザインに戻す) */
         .app-header {
             font-family: var(--font-label);
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* 元のサイズ */
             font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            padding: 10px;
-            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color); /* 元の色 */
+            margin-bottom: 30px; /* 元のmargin */
+            padding: 10px; /* 元のpadding */
+            border-bottom: 2px solid var(--primary-color); /* 元のボーダー */
             text-align: center;
             flex-shrink: 0;
+            background: none; /* 背景削除 */
+            width: auto; /* 幅を自動に */
+            box-shadow: none; /* 影削除 */
         }
 
         /* ボタン */
@@ -117,6 +120,7 @@
             font-weight: bold;
             color: #555;
             font-size: 0.7rem;
+            line-height: 1.4;
         }
         .copyright {
             text-align: center;
@@ -297,7 +301,8 @@
             margin: 0;
             font-size: 0.75rem;
             color: #555;
-            min-height: 2.2em; /* 高さを揃える (東ゲートの2行分) */
+            line-height: 1.4; /* 行の高さを指定 */
+            min-height: 2.8em; /* 1.4em * 2行分 (ずれ修正) */
         }
         .time-slot {
             display: flex;
@@ -376,7 +381,7 @@
             border-radius: 0; /* 角を四角に */
             padding: 20px;
             z-index: 20;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            box-shadow: none; /* 外側の影を削除 */
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -402,8 +407,8 @@
             line-height: 1;
         }
         .popup-icon {
-            width: 60px; /* 固定サイズ */
-            height: 60px; /* 固定サイズ */
+            width: 100px; /* 大きくする */
+            height: 100px; /* 大きくする */
             margin: 15px auto;
             flex-shrink: 0;
             object-fit: contain; /* 画像を引き伸ばさない */
@@ -441,11 +446,11 @@
             cursor: pointer;
             padding: 10px 20px;
             text-decoration: none; /* 下線を削除 */
-            border: 1px solid #333; /* 枠線を追加 */
+            border: 1px solid #000; /* 枠線を黒に */
             border-radius: 8px; /* 角丸 */
             display: inline-block; /* 枠線がテキストの周りに来るように */
             margin-top: 20px;
-            color: #333;
+            color: #000; /* テキストを黒に */
             font-weight: bold;
         }
         #close-failure-btn:hover {
@@ -464,8 +469,8 @@
             <button id="btn-normal" class="btn btn-normal">Normal</button>
             <button id="btn-hard" class="btn btn-hard">Hard</button>
             <div class="footer-notes">
-                <p class="disclaimer">このサイトはフェイクサイトです。非公式であり、実際に予約はできません。</p>
-                <p class="copyright">Made by <a href="https://github.com/chilu-da">Chilu-da</a></p>
+                <p class="disclaimer">このサイトはフェイクです。<br>実際に予約はできません。</p>
+                <p class="copyright">©Chilu-da</p>
             </div>
         </div>
 
