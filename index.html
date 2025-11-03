@@ -746,6 +746,10 @@
                 if (difficulty === 'Hard' && newMonth < 8) return;
 
                 this.state.month = newMonth;
+                
+                // ★修正点: 月移動時に人型マークのデータをリセット
+                this.state.dailyTimeSlotData = {}; 
+
                 // 月を切り替えたら日付選択は解除
                 this.state.selectedDateElement = null;
                 this.state.selectedDateStr = null;
@@ -914,10 +918,12 @@
 
             getRandomTimeSlotLevel(timeIndex) {
                 const { difficulty } = this.state;
+                
+                // ★修正点: 確率のベースを変更
                 const baseProbs = {
-                    Easy:   { blue: 0.05, red: 0.17 },
-                    Normal: { blue: 0.16, red: 0.40 },
-                    Hard:   { blue: 0.00, red: 0.99, yellow: 0.01 },
+                    Easy:   { blue: 0.05, red: 0.17 }, // (青:5%, 赤:17%, 黄:78%)
+                    Normal: { blue: 0.20, red: 0.40 }, // (青:20%, 赤:40%, 黄:40%)
+                    Hard:   { blue: 0.00, red: 0.95, yellow: 0.05 }, // (青:0%, 赤:95%, 黄:5%)
                 };
 
                 const probSet = baseProbs[difficulty];
