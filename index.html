@@ -37,8 +37,8 @@
             height: 100vh; /* 縦いっぱいに変更 */
             max-height: none; /* 最大高さを削除 */
             background-color: white;
-            box-shadow: none; 
-            border-radius: 0; 
+            box-shadow: none; /* 影を削除 */
+            border-radius: 0; /* 角丸を削除 */
             overflow: hidden;
             position: relative;
             display: flex;
@@ -139,15 +139,44 @@
             text-align: center;
             width: 100%;
         }
+        /* 月移動ヘッダーコンテナ */
+        #calendar-header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .month-nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .month-nav-btn:hover:not(:disabled) {
+            background-color: #b00020;
+        }
+        .month-nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
         #calendar-header {
-            width: 100%;
+            width: 140px;
             text-align: center;
             font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 10px;
             padding: 0 10px;
             box-sizing: border-box;
+            margin: 0;
         }
+
         #calendar-day-names-grid {
              display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -377,7 +406,7 @@
             width: 85%;
             max-width: 400px;
             background-color: white;
-            border: 3px solid black;
+            border: 3px solid black; /* 黒い縁取りを3pxに */
             border-radius: 0; /* 角を四角に */
             padding: 20px;
             z-index: 20;
@@ -470,7 +499,7 @@
             <button id="btn-hard" class="btn btn-hard">Hard</button>
             <div class="footer-notes">
                 <p class="disclaimer">このサイトはフェイクです。<br>実際に予約はできません。</p>
-                <p class="copyright">Made by <a href="https://github.com/chilu-da">Chilu-da</a></p>
+                <p class="copyright">Made by <a href="https://github.com/chilu-da" target="_blank" rel="noopener noreferrer">Chilu-da</a></p>
             </div>
         </div>
 
@@ -478,12 +507,16 @@
 
 <div id="frame2" class="frame">
             <h1>来場希望日</h1>
-            <!-- リセットアイコン -->
+            <!-- リセットアイコン (一本の矢印に変更) -->
             <svg class="settings-icon" id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="23 4 23 10 17 10"></polyline>
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
             </svg>
-            <h2 id="calendar-header"></h2>
+            <div id="calendar-header-container">
+                <button id="prev-month-btn" class="month-nav-btn">&lt;</button>
+                <h2 id="calendar-header"></h2>
+                <button id="next-month-btn" class="month-nav-btn">&gt;</button>
+            </div>
             <div id="calendar-day-names-grid"></div>
             <div id="calendar-grid"></div>
         </div>
@@ -568,12 +601,14 @@
             state: {
                 difficulty: null,
                 year: 2025,
-                month: null,
+                month: null, // 0-indexed (3=4月, 8=9月, 9=10月)
                 selectedDateElement: null, // DOM要素を保持
                 selectedDateStr: null,     // 日付文字列を保持 'YYYY-MM-DD'
                 dailyTimeSlotData: {},     // { 'YYYY-MM-DD': { east: [level, ...], west: [level, ...] } }
                 selectedTimeSlotElement: null, // DOM要素を保持
                 selectedTimeSlotData: null,    // { gate: '東ゲート', timeIndex: 0, level: 'available' }
+                failureIncrease: 0, // 予約失敗上昇確率
+                probabilityTimer: null, // 確率変動タイマー
             },
 
             // 定数
@@ -588,8 +623,10 @@
                 btnEasy: document.getElementById('btn-easy'),
                 btnNormal: document.getElementById('btn-normal'),
                 btnHard: document.getElementById('btn-hard'),
-                settingsIcon: document.getElementById('settings-icon'), // 追加
+                settingsIcon: document.getElementById('settings-icon'),
                 calendarHeader: document.getElementById('calendar-header'),
+                prevMonthBtn: document.getElementById('prev-month-btn'), // 追加
+                nextMonthBtn: document.getElementById('next-month-btn'), // 追加
                 calendarDayNamesGrid: document.getElementById('calendar-day-names-grid'),
                 calendarGrid: document.getElementById('calendar-grid'),
                 backToCalendarBtn: document.getElementById('back-to-calendar-btn'),
@@ -616,6 +653,10 @@
                 this.elements.btnHard.addEventListener('click', () => this.startGame('Hard'));
                 this.elements.settingsIcon.addEventListener('click', () => this.navigateTo('frame1')); // リセットアイコン
 
+                // 月移動ボタン
+                this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
+                this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
+
                 this.elements.backToCalendarBtn.addEventListener('click', () => this.navigateTo('frame2'));
 
                 this.elements.timeSlots.forEach(slot => {
@@ -624,22 +665,35 @@
                 
                 this.elements.btnConfirm.addEventListener('click', () => this.confirmBooking());
                 
-                this.elements.successPopup.querySelector('.close-btn').addEventListener('click', () => {
+                // 成功ポップアップのクローズ処理
+                const closeSuccessPopup = () => {
                     this.hidePopups();
                     this.navigateTo('frame1');
-                });
+                };
+                this.elements.successPopup.querySelector('.close-btn').addEventListener('click', closeSuccessPopup);
                 
+                // 失敗ポップアップのクローズ処理
                 const closeFailurePopup = () => {
                     this.hidePopups();
-                    // buildCalendar() は呼び出さない (人型マーク更新をしないため)
                     this.navigateTo('frame2');
-                    // ここではselectedTimeSlotDataはリセットしない（要件通り）
+                    // 時間情報はリセットしない
                 };
-                
                 this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', closeFailurePopup);
                 this.elements.closeFailureBtn.addEventListener('click', closeFailurePopup);
 
-                this.elements.overlay.addEventListener('click', () => this.hidePopups());
+                // オーバーレイのクリック処理 (修正)
+                this.elements.overlay.addEventListener('click', () => {
+                    if (!this.elements.successPopup.classList.contains('hidden')) {
+                        // 成功ポップアップが表示されている場合
+                        closeSuccessPopup();
+                    } else if (!this.elements.failurePopup.classList.contains('hidden')) {
+                        // 失敗ポップアップが表示されている場合
+                        closeFailurePopup();
+                    } else {
+                        // 予期しないケース
+                        this.hidePopups();
+                    }
+                });
             },
 
             // ゲーム開始
@@ -651,7 +705,8 @@
                 this.state.selectedTimeSlotElement = null;
                 this.state.selectedTimeSlotData = null; // 難易度変更時は時間選択もリセット
                 
-                const monthMap = { 'Easy': 3, 'Normal': 8, 'Hard': 9 }; // 0-indexed month
+                // Easy: 4月 (3), Normal: 9月 (8), Hard: 9月 (8) スタート
+                const monthMap = { 'Easy': 3, 'Normal': 8, 'Hard': 8 };
                 this.state.month = monthMap[difficulty];
                 
                 this.buildCalendar();
@@ -660,16 +715,73 @@
 
             // 画面遷移
             navigateTo(frameId) {
+                // 確率変動タイマーの管理
+                if (this.state.probabilityTimer) {
+                    clearInterval(this.state.probabilityTimer);
+                    this.state.probabilityTimer = null;
+                }
+
+                if (frameId === 'frame3') {
+                    // frame3に移動するとき、タイマーを起動
+                    this.state.failureIncrease = 0; // 失敗確率をリセット
+                    this.state.probabilityTimer = setInterval(() => {
+                        this.state.failureIncrease = Math.min(1.0, this.state.failureIncrease + 0.05); // 5%ずつ上昇 (最大100%)
+                    }, 500); // 0.5秒ごと
+                }
+                
                 this.elements.frames.forEach(frame => {
                     frame.classList.toggle('active', frame.id === frameId);
                 });
+            },
+
+            // 月移動
+            changeMonth(direction) {
+                const { month, difficulty } = this.state;
+                let newMonth = month + direction;
+
+                // 範囲外の移動は無視 (ボタンは既無効化されているはずだが、念のため)
+                if (newMonth < 3 || newMonth > 9) return;
+                // 難易度別制限
+                if (difficulty === 'Normal' && newMonth < 8) return;
+                if (difficulty === 'Hard' && newMonth < 8) return;
+
+                this.state.month = newMonth;
+                // 月を切り替えたら日付選択は解除
+                this.state.selectedDateElement = null;
+                this.state.selectedDateStr = null;
+                // selectedTimeSlotData は保持する
+                
+                this.buildCalendar(); // カレンダーを再描画
             },
             
             // カレンダー構築
             buildCalendar() {
                 this.elements.calendarHeader.textContent = `${this.state.year}年${this.state.month + 1}月`;
+                this.updateMonthNavButtons(); // ボタンの無効化処理
                 this.buildCalendarDayNames();
                 this.populateCalendarGrid();
+            },
+
+            // 月移動ボタンの更新
+            updateMonthNavButtons() {
+                const { month, difficulty } = this.state;
+                const prevBtn = this.elements.prevMonthBtn;
+                const nextBtn = this.elements.nextMonthBtn;
+                
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+
+                // 全体の範囲 (4月～10月)
+                if (month <= 3) prevBtn.disabled = true; // 4月
+                if (month >= 9) nextBtn.disabled = true; // 10月
+
+                // 難易度別
+                if (difficulty === 'Normal') {
+                    if (month <= 8) prevBtn.disabled = true; // 9月より前には行けない
+                }
+                if (difficulty === 'Hard') {
+                    if (month <= 8) prevBtn.disabled = true; // 9月より前には行けない
+                }
             },
             
             buildCalendarDayNames() {
@@ -752,13 +864,26 @@
                 return holidays[month] && holidays[month].includes(day);
             },
             
-            getDailyCrowdIconElement(year, month, day, dateStr) {
+            // 修正されたアイコン表示ロジック
+            getDailyCrowdIconElement(year, month_1_indexed, day, dateStr) {
                 const { difficulty } = this.state;
-                let showIcon = false;
-                if (difficulty === 'Easy' && month === 4 && day >= 13) showIcon = true;
-                if (difficulty === 'Normal' && month === 9) showIcon = true;
-                if (difficulty === 'Hard' && month === 10 && day <= 13) showIcon = true;
-                
+                let showIcon = false; // デフォルトは非表示
+
+                if (difficulty === 'Easy') {
+                    // 4/13以降、10月末まで表示
+                    if (month_1_indexed > 4 || (month_1_indexed === 4 && day >= 13)) {
+                        if (month_1_indexed <= 10) showIcon = true;
+                    }
+                } else if (difficulty === 'Normal') {
+                    // 9月と10月のみ表示
+                    if (month_1_indexed === 9 || month_1_indexed === 10) showIcon = true;
+                } else if (difficulty === 'Hard') {
+                    // 9/25以降、10月末まで表示
+                    if (month_1_indexed > 9 || (month_1_indexed === 9 && day >= 25)) {
+                         if (month_1_indexed <= 10) showIcon = true;
+                    }
+                }
+
                 const iconEl = document.createElement('img');
                 iconEl.className = 'crowd-icon';
                 
@@ -768,7 +893,7 @@
                     return placeholder;
                 }
 
-                const dailyData = this.state.dailyTimeSlotData[dateStr]; // 既に生成済みのはず
+                const dailyData = this.state.dailyTimeSlotData[dateStr];
                 const dayLevel = this.determineDayLevel(dailyData);
                 
                 if (dayLevel === 'full') iconEl.src = this.constants.iconImages.red;
@@ -823,15 +948,20 @@
                 return 'full';
             },
             
+            // 修正された日付レベル決定ロジック
             determineDayLevel(dailyData) {
                 const allLevels = [...dailyData.east, ...dailyData.west];
-                const redCount = allLevels.filter(l => l === 'full').length;
-                if (redCount >= (allLevels.length / 2)) return 'full'; // 半分以上が赤なら赤
-
+                
+                // 1. 1つでも「青」(available) があれば、日付は「青」
                 const blueCount = allLevels.filter(l => l === 'available').length;
-                if (blueCount > 0) return 'available'; // 1つでも青があれば青
+                if (blueCount > 0) return 'available'; 
 
-                return 'congested'; // それ以外は黄色
+                // 2. (青がなく) 1つでも「黄」(congested) があれば、日付は「黄」
+                const yellowCount = allLevels.filter(l => l === 'congested').length;
+                if (yellowCount > 0) return 'congested';
+
+                // 3. (青も黄もなく) すべてが「赤」(full) なら、日付は「赤」
+                return 'full';
             },
             
             selectDate(cell) {
@@ -932,19 +1062,22 @@
             
             confirmBooking() {
                 if (!this.state.selectedTimeSlotData) {
-                    // アラートの代わりにカスタムUIを出すべきだが、仕様にないのでconsole.warn
                     console.warn('時間を選択してください。');
                     return;
                 }
                 
                 const crowdLevel = this.state.selectedTimeSlotData.level;
-                const successRates = {
+                const baseSuccessRates = {
                     available: 0.75,
                     congested: this.state.difficulty === 'Hard' ? 0.01 : 0.20,
                     full: this.state.difficulty === 'Hard' ? 0.0001 : 0.05,
                 };
                 
-                const success = Math.random() < (successRates[crowdLevel] || 0);
+                const baseRate = baseSuccessRates[crowdLevel] || 0;
+                // 時間経過による失敗確率を適用
+                const actualSuccessRate = Math.max(0, baseRate - this.state.failureIncrease);
+                
+                const success = Math.random() < actualSuccessRate;
                 
                 if (success) this.showSuccessPopup();
                 else this.showFailurePopup();
