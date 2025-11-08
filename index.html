@@ -24,16 +24,20 @@
             margin: 0;
             background-color: #f9f9f9;
             color: #333;
+            /* ★修正: PC全画面表示のためflex中央揃えを解除 */
+            /*
             display: flex;
             justify-content: center;
             align-items: center;
+            */
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent; /* スマホのタップ時のハイライトを消す */
         }
 
         #app-container {
             width: 100%;
-            max-width: 480px; /* スマホ幅を維持し、PCでは中央寄せ */
+            /* ★修正: max-width を解除し、白い背景を全画面に */
+            /* max-width: 480px; */ 
             height: 100vh; /* 縦いっぱいに変更 */
             max-height: none; /* 最大高さを削除 */
             background-color: white;
@@ -52,11 +56,17 @@
             align-items: center;
             width: 100%;
             box-sizing: border-box;
+
+            /* ★追加: コンテンツ(フレーム)自体を中央揃えにする */
+            max-width: 480px; /* オブジェクトの横幅は維持 */
+            margin: 0 auto; /* PC表示時に中央寄せ */
         }
 
         .frame.active {
             display: flex;
             height: 100%;
+            /* ★追加: フレームが中央寄せされても幅は確保する (max-width は上記で設定済み) */
+            width: 100%;
         }
 
         #frame1 {
