@@ -398,7 +398,6 @@
             flex-shrink: 0; /* スクロールさせない */
         }
         
-        /* ★修正点: 無効化されたボタンのスタイル */
         .btn-confirm:disabled {
             background-color: #ccc;
             cursor: not-allowed;
@@ -765,7 +764,6 @@
 
                 this.state.month = newMonth;
                 
-                // ★修正点: 月移動時に人型マークのデータをリセット
                 this.state.dailyTimeSlotData = {}; 
 
                 // 月を切り替えたら日付選択は解除
@@ -818,7 +816,6 @@
                 });
             },
             
-            // ★修正点: 10月の制限と、「赤」の日のクリック制御、プレースホルダーの制御を修正
             populateCalendarGrid() {
                 this.elements.calendarGrid.innerHTML = '';
                 const { year, month } = this.state;
@@ -853,7 +850,6 @@
                         dateNumber.textContent = date;
                         cell.appendChild(dateNumber);
 
-                        // ★修正点: dateStr の作成方法を変更 (タイムゾーンずれ対策)
                         const y = currentDate.getFullYear();
                         const m = (currentDate.getMonth() + 1).toString().padStart(2, '0');
                         const d = currentDate.getDate().toString().padStart(2, '0');
@@ -875,11 +871,9 @@
                         const dailyData = this.state.dailyTimeSlotData[dateStr];
                         const dayLevel = this.determineDayLevel(dailyData);
 
-                        // ★修正点: getDailyCrowdIconElement に month と day を渡す
                         const iconContainer = this.getDailyCrowdIconElement(year, month + 1, date, dateStr, dayLevel);
                         cell.appendChild(iconContainer);
 
-                        // ★修正点: placeholder がある場合、または dayLevel が 'full' の場合はクリック不可
                         const hasPlaceholder = iconContainer.classList.contains('placeholder');
                         
                         if (hasPlaceholder) {
@@ -912,7 +906,6 @@
                 return holidays[month] && holidays[month].includes(day);
             },
             
-            // ★修正点: 10月14日以降もプレースホルダーを返すように showIcon のロジックを修正
             getDailyCrowdIconElement(year, month_1_indexed, day, dateStr, dayLevel) {
                 const { difficulty } = this.state;
                 let showIcon = false; // デフォルトは非表示
@@ -964,11 +957,11 @@
             getRandomTimeSlotLevel(timeIndex) {
                 const { difficulty } = this.state;
                 
-                // ★修正点: 確率のベースを変更 (Hardの黄色を1%に)
+                // ★修正点: 確率のベースを変更 (Easy と Normal)
                 const baseProbs = {
-                    Easy:   { blue: 0.05, red: 0.17 }, // (青:5%, 赤:17%, 黄:78%)
-                    Normal: { blue: 0.20, red: 0.40 }, // (青:20%, 赤:40%, 黄:40%)
-                    Hard:   { blue: 0.00, red: 0.99, yellow: 0.01 }, // (青:0%, 赤:99%, 黄:1%)
+                    Easy:   { blue: 0.75, red: 0.07 }, // (黄: 18%)
+                    Normal: { blue: 0.10, red: 0.20 }, // (黄: 70%)
+                    Hard:   { blue: 0.00, red: 0.999975, yellow: 0.000025 }, // (青:0%, 赤:99.9975%, 黄:0.0025%)
                 };
 
                 const probSet = baseProbs[difficulty];
@@ -976,12 +969,10 @@
                 const adjustment = 0.005 * timeIndex; // 0.5%ずつ
 
                 if (difficulty === 'Hard') {
-                    yellowProb = probSet.yellow + adjustment;
-                    redProb = probSet.red - adjustment;
-                    
-                    yellowProb = Math.max(0, Math.min(1, yellowProb));
-                    redProb = Math.max(0, Math.min(1, redProb));
-                    blueProb = 1 - yellowProb - redProb; // Hardの青は調整なしなので、残りで計算
+                    // Hardの場合は adjustment を適用しない（yellow がほぼ0のため）
+                    yellowProb = probSet.yellow;
+                    redProb = probSet.red;
+                    blueProb = probSet.blue; // 0
                 } else {
                     blueProb = probSet.blue + adjustment;
                     redProb = probSet.red - adjustment;
@@ -999,19 +990,15 @@
                 return 'full';
             },
             
-            // 修正された日付レベル決定ロジック
             determineDayLevel(dailyData) {
                 const allLevels = [...dailyData.east, ...dailyData.west];
                 
-                // 1. 1つでも「青」(available) があれば、日付は「青」
                 const blueCount = allLevels.filter(l => l === 'available').length;
                 if (blueCount > 0) return 'available'; 
 
-                // 2. (青がなく) 1つでも「黄」(congested) があれば、日付は「黄」
                 const yellowCount = allLevels.filter(l => l === 'congested').length;
                 if (yellowCount > 0) return 'congested';
 
-                // 3. (青も黄もなく) すべてが「赤」(full) なら、日付は「赤」
                 return 'full';
             },
             
@@ -1028,15 +1015,12 @@
                 this.navigateTo('frame3');
             },
 
-            // ★修正点: ボタンの無効化処理を追加
             populateTimeSlots() {
                 const dateStr = this.state.selectedDateStr;
                 const dailyData = this.state.dailyTimeSlotData[dateStr];
                 
-                // 現在の選択状態をクリア
                 this.elements.timeSlots.forEach(slot => slot.classList.remove('selected'));
                 this.state.selectedTimeSlotElement = null;
-                // selectedTimeSlotData は日付切り替え時に保持される場合があるのでクリアしない
 
 
                 this.elements.timeSlots.forEach(slot => {
@@ -1057,41 +1041,31 @@
                         <span>${time}-</span>
                     `;
 
-                    // 以前選択されていた時間スロットデータが残っていて、それが現在のスロットと一致する場合
                     if (this.state.selectedTimeSlotData &&
                         this.state.selectedTimeSlotData.gate === slot.dataset.gate &&
                         this.state.selectedTimeSlotData.timeIndex === timeIndex) {
                         
-                        // このスロットを選択状態にする
                         slot.classList.add('selected');
                         this.state.selectedTimeSlotElement = slot; // DOM参照を更新
                         
-                        // 選択状態のlevelを、今見ている新しい日付のlevelに更新する
                         this.state.selectedTimeSlotData.level = level; 
                         
                     }
                 });
 
-                // ★修正点: populateTimeSlots の最後にボタンの状態を決定
                 if (!this.state.selectedTimeSlotData) {
-                    // 日付を切り替えて、時間未選択状態
                     this.elements.btnConfirm.disabled = true;
                 } else if (this.state.selectedTimeSlotData.level === 'full') {
-                    // 日付を切り替えて、復元された時間が 'full' だった
                     this.elements.btnConfirm.disabled = true;
                 } else {
-                    // 日付を切り替えて、復元された時間が 'full' 以外
                     this.elements.btnConfirm.disabled = false;
                 }
             },
             
-            // ★修正点: ボタンの無効化処理を追加
             selectTimeSlot(slot) {
-                // 現在選択されているスロットがあれば解除
                 if (this.state.selectedTimeSlotElement) {
                     this.state.selectedTimeSlotElement.classList.remove('selected');
                 }
-                // 新しいスロットを選択状態にする
                 slot.classList.add('selected');
                 this.state.selectedTimeSlotElement = slot;
                 this.state.selectedTimeSlotData = {
@@ -1102,7 +1076,6 @@
                 this.updateSelectionSummary();
                 this.elements.selectionSummary.classList.add('visible');
 
-                // ★修正点: 選択されたレベルに応じてボタンを制御
                 if (slot.dataset.level === 'full') {
                     this.elements.btnConfirm.disabled = true;
                 } else {
@@ -1110,15 +1083,12 @@
                 }
             },
             
-            // ★修正点: 日付の解釈方法を変更
             updateSelectionSummary() {
-                // 選択データが存在する場合のみサマリーを更新・表示
                 if (!this.state.selectedDateStr || !this.state.selectedTimeSlotData) {
                     this.elements.selectionSummary.classList.remove('visible');
                     return;
                 }
                 
-                // ★修正点: タイムゾーンの問題を回避
                 const parts = this.state.selectedDateStr.split('-');
                 const year = parseInt(parts[0], 10);
                 const month = parseInt(parts[1], 10) - 1; // JSの月は0-indexed
@@ -1139,7 +1109,6 @@
                 this.elements.selectionSummary.classList.add('visible');
             },
             
-            // ★修正点: 'full' の場合は予約不可＆難易度別の成功率を適用
             confirmBooking() {
                 if (!this.state.selectedTimeSlotData || this.state.selectedTimeSlotData.level === 'full') {
                     console.warn('時間を選択してください、または選択された時間は予約できません。');
@@ -1148,7 +1117,6 @@
                 
                 const crowdLevel = this.state.selectedTimeSlotData.level;
                 
-                // ★修正点: 難易度に応じて成功率(baseSuccessRates)を設定
                 let baseSuccessRates;
                 const { difficulty } = this.state;
 
