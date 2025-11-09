@@ -847,8 +847,6 @@
                     } else {
                         // 当月
                         const currentDate = new Date(year, month, date);
-
-                        // ★修正点: isOctoberRestricted の分岐を削除
                         
                         const dateNumber = document.createElement('span');
                         dateNumber.className = 'date-number';
@@ -946,10 +944,6 @@
                     placeholder.className = 'crowd-icon placeholder';
                     return placeholder;
                 }
-
-                // ★修正点: dayLevelの計算ロジックを populateCalendarGrid に移動したため、ここでは削除
-                // const dailyData = this.state.dailyTimeSlotData[dateStr];
-                // const dayLevel = this.determineDayLevel(dailyData);
                 
                 if (dayLevel === 'full') iconEl.src = this.constants.iconImages.red;
                 else if (dayLevel === 'available') iconEl.src = this.constants.iconImages.blue;
@@ -970,11 +964,11 @@
             getRandomTimeSlotLevel(timeIndex) {
                 const { difficulty } = this.state;
                 
-                // ★修正点: 確率のベースを変更
+                // ★修正点: 確率のベースを変更 (Hardの黄色を1%に)
                 const baseProbs = {
                     Easy:   { blue: 0.05, red: 0.17 }, // (青:5%, 赤:17%, 黄:78%)
                     Normal: { blue: 0.20, red: 0.40 }, // (青:20%, 赤:40%, 黄:40%)
-                    Hard:   { blue: 0.00, red: 0.95, yellow: 0.05 }, // (青:0%, 赤:95%, 黄:5%)
+                    Hard:   { blue: 0.00, red: 0.99, yellow: 0.01 }, // (青:0%, 赤:99%, 黄:1%)
                 };
 
                 const probSet = baseProbs[difficulty];
@@ -1123,9 +1117,6 @@
                     this.elements.selectionSummary.classList.remove('visible');
                     return;
                 }
-
-                // const date = new Date(this.state.selectedDateStr);
-                // date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // UTC to local
                 
                 // ★修正点: タイムゾーンの問題を回避
                 const parts = this.state.selectedDateStr.split('-');
@@ -1148,7 +1139,7 @@
                 this.elements.selectionSummary.classList.add('visible');
             },
             
-            // ★修正点: 'full' の場合は予約不可にする
+            // ★修正点: 'full' の場合は予約不可＆難易度別の成功率を適用
             confirmBooking() {
                 if (!this.state.selectedTimeSlotData || this.state.selectedTimeSlotData.level === 'full') {
                     console.warn('時間を選択してください、または選択された時間は予約できません。');
@@ -1156,11 +1147,37 @@
                 }
                 
                 const crowdLevel = this.state.selectedTimeSlotData.level;
-                const baseSuccessRates = {
-                    available: 0.75,
-                    congested: this.state.difficulty === 'Hard' ? 0.01 : 0.20,
-                    full: this.state.difficulty === 'Hard' ? 0.0001 : 0.05,
-                };
+                
+                // ★修正点: 難易度に応じて成功率(baseSuccessRates)を設定
+                let baseSuccessRates;
+                const { difficulty } = this.state;
+
+                if (difficulty === 'Easy') {
+                    baseSuccessRates = {
+                        available: 0.98, // Easy (青): 98%
+                        congested: 0.90, // Easy (黄): 90%
+                        full: 0.05,      // (念のため設定)
+                    };
+                } else if (difficulty === 'Normal') {
+                    baseSuccessRates = {
+                        available: 0.75, // (デフォルト)
+                        congested: 0.20, // (デフォルト)
+                        full: 0.05,      // (デフォルト)
+                    };
+                } else if (difficulty === 'Hard') {
+                    baseSuccessRates = {
+                        available: 0.75, // (デフォルト)
+                        congested: 0.80, // Hard (黄): 80%
+                        full: 0.0001,    // (デフォルト)
+                    };
+                } else {
+                    // デフォルト (Normal相当)
+                    baseSuccessRates = {
+                        available: 0.75,
+                        congested: 0.20,
+                        full: 0.05,
+                    };
+                }
                 
                 const baseRate = baseSuccessRates[crowdLevel] || 0;
                 // 時間経過による失敗確率を適用
