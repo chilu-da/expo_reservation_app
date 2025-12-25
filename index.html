@@ -756,11 +756,23 @@
                 const { month, difficulty } = this.state;
                 let newMonth = month + direction;
 
+                // 10月(9)から次を押したら1月(0)へ
+                if (month === 9 && direction === 1) {
+                    newMonth = 0;
+                }
+                // 1月(0)から前を押したら10月(9)へ
+                else if (month === 0 && direction === -1) {
+                    newMonth = 9;
+                }
+                
                 // 範囲外の移動は無視 (ボタンは既無効化されているはずだが、念のため)
-                if (newMonth < 3 || newMonth > 9) return;
-                // 難易度別制限
-                if (difficulty === 'Normal' && newMonth < 8) return;
-                if (difficulty === 'Hard' && newMonth < 8) return;
+                if (newMonth < 0 || (newMonth > 3 && newMonth < 8) || newMonth > 9) {
+                    // 1月(0)と4月～10月(3～9)以外は無効
+                    if (!(newMonth === 0 || (newMonth >= 3 && newMonth <= 9))) return;
+                }
+                // 難易度別制限（1月は難易度に関係なく追加されるため、除外）
+                if (difficulty === 'Normal' && newMonth < 8 && newMonth !== 0) return;
+                if (difficulty === 'Hard' && newMonth < 8 && newMonth !== 0) return;
 
                 this.state.month = newMonth;
                 
@@ -791,16 +803,25 @@
                 prevBtn.disabled = false;
                 nextBtn.disabled = false;
 
-                // 全体の範囲 (4月～10月)
-                if (month <= 3) prevBtn.disabled = true; // 4月
-                if (month >= 9) nextBtn.disabled = true; // 10月
-
-                // 難易度別
-                if (difficulty === 'Normal') {
-                    if (month <= 8) prevBtn.disabled = true; // 9月より前には行けない
+                // 1月の場合
+                if (month === 0) {
+                    prevBtn.disabled = false; // 1月から前ボタンで10月に戻れる
+                    nextBtn.disabled = true; // 1月より後には行けない（2月以降は存在しない）
                 }
-                if (difficulty === 'Hard') {
-                    if (month <= 8) prevBtn.disabled = true; // 9月より前には行けない
+                // 全体の範囲 (4月～10月)
+                else if (month <= 3) {
+                    prevBtn.disabled = true; // 4月
+                }
+                else if (month === 9) {
+                    nextBtn.disabled = false; // 10月の次は1月へ行ける
+                }
+
+                // 難易度別（1月は除外）
+                if (difficulty === 'Normal' && month !== 0) {
+                    if (month <= 8 && month >= 3) prevBtn.disabled = true; // 9月より前には行けない（1月を除く）
+                }
+                if (difficulty === 'Hard' && month !== 0) {
+                    if (month <= 8 && month >= 3) prevBtn.disabled = true; // 9月より前には行けない（1月を除く）
                 }
             },
             
@@ -902,7 +923,7 @@
             
             isHoliday(year, month, day) {
                 if (year !== 2025) return false;
-                const holidays = { 4: [29], 5: [3], 9: [15, 23], 10: [13] };
+                const holidays = { 1: [1, 13], 4: [29], 5: [3], 9: [15, 23], 10: [13] }; // 1月: 1日(元日), 13日(成人の日)
                 return holidays[month] && holidays[month].includes(day);
             },
             
@@ -910,7 +931,11 @@
                 const { difficulty } = this.state;
                 let showIcon = false; // デフォルトは非表示
 
-                if (difficulty === 'Easy') {
+                // 1月は難易度に関係なく追加
+                if (month_1_indexed === 1) {
+                    showIcon = true;
+                }
+                else if (difficulty === 'Easy') {
                     // 4/13以降、10/13まで
                     if ( (month_1_indexed > 4 || (month_1_indexed === 4 && day >= 13)) && 
                          (month_1_indexed < 10 || (month_1_indexed === 10 && day <= 13)) ) {
