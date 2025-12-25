@@ -786,9 +786,15 @@
                 this.buildCalendar(); // カレンダーを再描画
             },
             
+            // 現在の月に対応する年を取得（1月の場合は2026年、それ以外は2025年）
+            getCurrentYear() {
+                return this.state.month === 0 ? 2026 : 2025;
+            },
+
             // カレンダー構築
             buildCalendar() {
-                this.elements.calendarHeader.textContent = `${this.state.year}年${this.state.month + 1}月`;
+                const year = this.getCurrentYear();
+                this.elements.calendarHeader.textContent = `${year}年${this.state.month + 1}月`;
                 this.updateMonthNavButtons(); // ボタンの無効化処理
                 this.buildCalendarDayNames();
                 this.populateCalendarGrid();
@@ -839,7 +845,8 @@
             
             populateCalendarGrid() {
                 this.elements.calendarGrid.innerHTML = '';
-                const { year, month } = this.state;
+                const month = this.state.month;
+                const year = this.getCurrentYear();
                 
                 const firstDay = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -922,9 +929,17 @@
             },
             
             isHoliday(year, month, day) {
-                if (year !== 2025) return false;
-                const holidays = { 1: [1, 13], 4: [29], 5: [3], 9: [15, 23], 10: [13] }; // 1月: 1日(元日), 13日(成人の日)
-                return holidays[month] && holidays[month].includes(day);
+                // 2025年の祝日
+                if (year === 2025) {
+                    const holidays = { 4: [29], 5: [3], 9: [15, 23], 10: [13] };
+                    return holidays[month] && holidays[month].includes(day);
+                }
+                // 2026年の祝日（1月のみ）
+                if (year === 2026 && month === 1) {
+                    const holidays = { 1: [1, 12] }; // 1月: 1日(元日), 12日(成人の日)
+                    return holidays[month] && holidays[month].includes(day);
+                }
+                return false;
             },
             
             getDailyCrowdIconElement(year, month_1_indexed, day, dateStr, dayLevel) {
