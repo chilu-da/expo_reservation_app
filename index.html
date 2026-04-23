@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -19,1210 +20,1192 @@
             --font-main: 'Noto Sans JP', sans-serif;
         }
 
-        body {
-            font-family: var(--font-main);
-            margin: 0;
-            background-color: #f9f9f9;
-            color: #333;
-            /* ★修正: PC全画面表示のためflex中央揃えを解除 */
-            /*
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            */
-            min-height: 100vh;
-            -webkit-tap-highlight-color: transparent; /* スマホのタップ時のハイライトを消す */
-        }
+```
+    body {
+        font-family: var(--font-main);
+        margin: 0;
+        background-color: #f9f9f9;
+        color: #333;
+        /* ★修正: PC全画面表示のためflex中央揃えを解除 */
+        /*
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        */
+        min-height: 100vh;
+        -webkit-tap-highlight-color: transparent; /* スマホのタップ時のハイライトを消す */
+    }
 
-        #app-container {
-            width: 100%;
-            /* ★修正: max-width を解除し、白い背景を全画面に */
-            /* max-width: 480px; */ 
-            height: 100vh; /* 縦いっぱいに変更 */
-            max-height: none; /* 最大高さを削除 */
-            background-color: white;
-            box-shadow: none; /* 影を削除 */
-            border-radius: 0; /* 角丸を削除 */
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
+    #app-container {
+        width: 100%;
+        /* ★修正: max-width を解除し、白い背景を全画面に */
+        /* max-width: 480px; */ 
+        height: 100vh; /* 縦いっぱいに変更 */
+        max-height: none; /* 最大高さを削除 */
+        background-color: white;
+        box-shadow: none; /* 影を削除 */
+        border-radius: 0; /* 角丸を削除 */
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
 
-        .frame {
-            display: none;
-            padding: 20px;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            box-sizing: border-box;
+    .frame {
+        display: none;
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
 
-            /* ★追加: コンテンツ(フレーム)自体を中央揃えにする */
-            max-width: 480px; /* オブジェクトの横幅は維持 */
-            margin: 0 auto; /* PC表示時に中央寄せ */
-        }
+        /* ★追加: コンテンツ(フレーム)自体を中央揃えにする */
+        max-width: 480px; /* オブジェクトの横幅は維持 */
+        margin: 0 auto; /* PC表示時に中央寄せ */
+    }
 
-        .frame.active {
-            display: flex;
-            height: 100%;
-            /* ★追加: フレームが中央寄せされても幅は確保する (max-width は上記で設定済み) */
-            width: 100%;
-        }
+    .frame.active {
+        display: flex;
+        height: 100%;
+        /* ★追加: フレームが中央寄せされても幅は確保する (max-width は上記で設定済み) */
+        width: 100%;
+    }
 
-        #frame1 {
-            justify-content: center;
-            position: relative; /* フッター配置のため */
-            padding-bottom: 70px; /* フッターのスペース確保 */
-        }
+    #frame1 {
+        justify-content: center;
+        position: relative; /* フッター配置のため */
+        padding-bottom: 70px; /* フッターのスペース確保 */
+    }
 
-        /* ヘッダー (元のデザインに戻す) */
-        .app-header {
-            font-family: var(--font-label);
-            font-size: 1.5rem; /* 元のサイズ */
-            font-weight: bold;
-            color: var(--primary-color); /* 元の色 */
-            margin-bottom: 30px; /* 元のmargin */
-            padding: 10px; /* 元のpadding */
-            border-bottom: 2px solid var(--primary-color); /* 元のボーダー */
-            text-align: center;
-            flex-shrink: 0;
-            background: none; /* 背景削除 */
-            width: auto; /* 幅を自動に */
-            box-shadow: none; /* 影削除 */
-        }
+    /* ヘッダー (元のデザインに戻す) */
+    .app-header {
+        font-family: var(--font-label);
+        font-size: 1.5rem; /* 元のサイズ */
+        font-weight: bold;
+        color: var(--primary-color); /* 元の色 */
+        margin-bottom: 30px; /* 元のmargin */
+        padding: 10px; /* 元のpadding */
+        border-bottom: 2px solid var(--primary-color); /* 元のボーダー */
+        text-align: center;
+        flex-shrink: 0;
+        background: none; /* 背景削除 */
+        width: auto; /* 幅を自動に */
+        box-shadow: none; /* 影削除 */
+    }
 
-        /* ボタン */
-        .btn {
-            font-family: var(--font-main);
-            font-size: 1.1rem;
-            font-weight: bold;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 80%;
-            margin-bottom: 15px;
-            text-align: center;
-        }
+    /* ボタン */
+    .btn {
+        font-family: var(--font-main);
+        font-size: 1.1rem;
+        font-weight: bold;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 80%;
+        margin-bottom: 15px;
+        text-align: center;
+    }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
 
-        .btn-easy { background-color: #4CAF50; color: white; }
-        .btn-normal { background-color: #FFC107; color: #333; }
-        .btn-hard { background-color: #F44336; color: white; }
-        
-        /* Frame1 フッター */
-        .footer-notes {
-            position: absolute;
-            bottom: 15px;
-            left: 20px;
-            right: 20px;
-            font-size: 0.75rem;
-            color: #777;
-        }
-        .disclaimer {
-            text-align: right;
-            margin: 0 0 5px 0;
-            font-weight: bold;
-            color: #555;
-            font-size: 0.7rem;
-            line-height: 1.4;
-        }
-        .copyright {
-            text-align: center;
-            margin: 0;
-        }
+    .btn-easy { background-color: #4CAF50; color: white; }
+    .btn-normal { background-color: #FFC107; color: #333; }
+    .btn-hard { background-color: #F44336; color: white; }
+    
+    /* Frame1 フッター */
+    .footer-notes {
+        position: absolute;
+        bottom: 15px;
+        left: 20px;
+        right: 20px;
+        font-size: 0.75rem;
+        color: #777;
+    }
+    .disclaimer {
+        text-align: right;
+        margin: 0 0 5px 0;
+        font-weight: bold;
+        color: #555;
+        font-size: 0.7rem;
+        line-height: 1.4;
+    }
+    .copyright {
+        text-align: center;
+        margin: 0;
+    }
 
-        /* Frame2: カレンダー */
-        #frame2 {
-            padding: 10px;
-            flex-grow: 1;
-            position: relative; /* アイコンの配置用 */
-        }
-        #frame2 h1 {
-            font-size: 1.4rem;
-            margin: 0 0 10px 0;
-            text-align: center;
-            width: 100%;
-        }
-        /* 月移動ヘッダーコンテナ */
-        #calendar-header-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .month-nav-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            line-height: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .month-nav-btn:hover:not(:disabled) {
-            background-color: #b00020;
-        }
-        .month-nav-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        #calendar-header {
-            width: 140px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 0 10px;
-            box-sizing: border-box;
-            margin: 0;
-        }
+    /* Frame2: カレンダー */
+    #frame2 {
+        padding: 10px;
+        flex-grow: 1;
+        position: relative; /* アイコンの配置用 */
+    }
+    #frame2 h1 {
+        font-size: 1.4rem;
+        margin: 0 0 10px 0;
+        text-align: center;
+        width: 100%;
+    }
+    /* 月移動ヘッダーコンテナ */
+    #calendar-header-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .month-nav-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .month-nav-btn:hover:not(:disabled) {
+        background-color: #b00020;
+    }
+    .month-nav-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    #calendar-header {
+        width: 140px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 0 10px;
+        box-sizing: border-box;
+        margin: 0;
+    }
 
-        #calendar-day-names-grid {
-             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            width: 100%;
-        }
-        #calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            width: 100%;
-            flex-grow: 1;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .calendar-day-name {
-            font-size: 0.8rem;
-            text-align: center;
-            padding: 8px 0;
-            font-weight: bold;
-        }
-        .day-name-sun { color: red; }
-        .day-name-sat { color: blue; }
+    #calendar-day-names-grid {
+         display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        width: 100%;
+    }
+    #calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        width: 100%;
+        flex-grow: 1;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .calendar-day-name {
+        font-size: 0.8rem;
+        text-align: center;
+        padding: 8px 0;
+        font-weight: bold;
+    }
+    .day-name-sun { color: red; }
+    .day-name-sat { color: blue; }
 
-        .calendar-date {
-            padding: 2px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            border-bottom: 1px solid #eee;
-            border-right: 1px solid #eee;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            position: relative;
-        }
-        .calendar-date:nth-child(7n) { border-right: none; }
-        
-        .date-number {
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
+    .calendar-date {
+        padding: 2px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        position: relative;
+    }
+    .calendar-date:nth-child(7n) { border-right: none; }
+    
+    .date-number {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
 
-        .date-sun { color: red; }
-        .date-sat { color: blue; }
-        
-        .other-month .date-number {
-            color: #ccc;
-        }
-        .calendar-date.other-month {
-            cursor: default;
-        }
+    .date-sun { color: red; }
+    .date-sat { color: blue; }
+    
+    .other-month .date-number {
+        color: #ccc;
+    }
+    .calendar-date.other-month {
+        cursor: default;
+    }
 
-        .calendar-date:not(.other-month):hover {
-            background-color: #f0f8ff;
-        }
-        
-        .calendar-date.selected {
-            background-color: var(--highlight-color);
-            border: 1px solid var(--primary-color);
-        }
+    .calendar-date:not(.other-month):hover {
+        background-color: #f0f8ff;
+    }
+    
+    .calendar-date.selected {
+        background-color: var(--highlight-color);
+        border: 1px solid var(--primary-color);
+    }
 
-        .crowd-icon {
-            width: 80%;
-            height: auto;
-            margin-top: 4px;
-            flex-grow: 1;
-            object-fit: contain;
-        }
-        .crowd-icon.placeholder {
-            background-color: #e0e0e0;
-            width: 70%;
-            height: 30%;
-            border-radius: 4px;
-            margin-top: 8px;
-        }
-        .settings-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 25px;
-            height: 25px;
-            padding: 4px;
-            cursor: pointer;
-            color: #000; /* 黒色に変更 */
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2.5;
-            z-index: 50;
-            box-sizing: content-box;
-        }
+    .crowd-icon {
+        width: 80%;
+        height: auto;
+        margin-top: 4px;
+        flex-grow: 1;
+        object-fit: contain;
+    }
+    .crowd-icon.placeholder {
+        background-color: #e0e0e0;
+        width: 70%;
+        height: 30%;
+        border-radius: 4px;
+        margin-top: 8px;
+    }
+    .settings-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 25px;
+        height: 25px;
+        padding: 4px;
+        cursor: pointer;
+        color: #000; /* 黒色に変更 */
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.5;
+        z-index: 50;
+        box-sizing: content-box;
+    }
 
 
-        /* Frame3: 時間選択 */
-        #frame3-scroll-container {
-            overflow-y: auto;
-            width: 100%;
-            flex-grow: 1;
-            padding: 0 20px; /* frameのpaddingと合わせる */
-            box-sizing: border-box;
-        }
-        #frame3 {
-            padding: 0; /* scroll-containerでpaddingを制御 */
-        }
-        #frame3-header {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            position: relative;
-            justify-content: center;
-            margin-bottom: 10px;
-            padding: 20px 20px 0 20px; /* frame3の元のpaddingの上部のみ残す */
-            box-sizing: border-box;
-            flex-shrink: 0; /* スクロールさせない */
-        }
-        .back-btn {
-            position: absolute;
-            left: 20px; /* paddingと合わせる */
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 15px;
-            color: #555;
-        }
+    /* Frame3: 時間選択 */
+    #frame3-scroll-container {
+        overflow-y: auto;
+        width: 100%;
+        flex-grow: 1;
+        padding: 0 20px; /* frameのpaddingと合わせる */
+        box-sizing: border-box;
+    }
+    #frame3 {
+        padding: 0; /* scroll-containerでpaddingを制御 */
+    }
+    #frame3-header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        position: relative;
+        justify-content: center;
+        margin-bottom: 10px;
+        padding: 20px 20px 0 20px; /* frame3の元のpaddingの上部のみ残す */
+        box-sizing: border-box;
+        flex-shrink: 0; /* スクロールさせない */
+    }
+    .back-btn {
+        position: absolute;
+        left: 20px; /* paddingと合わせる */
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0 15px;
+        color: #555;
+    }
 
-        #time-selection-table {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .gate-column {
-            width: 48%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-        }
-        .gate-header {
-            margin-bottom: 10px;
-            flex-shrink: 0;
-            background-color: var(--light-gray); /* 背景をグレーに */
-            padding: 10px 5px;
-            border-radius: 6px;
-        }
-        .gate-header h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.1rem;
-        }
-        .gate-header p {
-            margin: 0;
-            font-size: 0.75rem;
-            color: #555;
-            line-height: 1.4; /* 行の高さを指定 */
-            min-height: 2.8em; /* 1.4em * 2行分 (ずれ修正) */
-        }
-        .time-slot {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            height: 50px; /* 時間スロットの高さを揃える */
-            box-sizing: border-box;
-        }
-        .time-slot.selected {
-            background-color: var(--highlight-color);
-            border-color: var(--primary-color);
-            transform: scale(1.05);
-        }
-        .time-slot .crowd-icon {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-        
-        .info-label {
-            width: 100%;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 0.9rem;
-            box-sizing: border-box;
-        }
-        .info-transport {
-            background-color: var(--light-gray);
-            font-weight: bold;
-        }
-        .info-selection {
-            background-color: var(--highlight-color);
-            line-height: 1.6;
-            visibility: hidden;
-        }
-        .info-selection.visible {
-            visibility: visible;
-        }
-        
-        .btn-confirm {
-            background-color: var(--primary-color);
-            color: white;
-            width: calc(100% - 40px); /* frame3の左右padding分引く */
-            margin: 20px 20px 20px 20px; /* frame3のpaddingと合わせる */
-            padding: 18px;
-            flex-shrink: 0; /* スクロールさせない */
-        }
-        
-        .btn-confirm:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        /* ポップアップ */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 10;
-        }
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85%;
-            max-width: 400px;
-            background-color: white;
-            border: 3px solid black; /* 黒い縁取りを3pxに */
-            border-radius: 0; /* 角を四角に */
-            padding: 20px;
-            z-index: 20;
-            box-shadow: none; /* 外側の影を削除 */
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            max-height: 84%;
-        }
-        .popup-content-scrollable {
-            overflow-y: auto;
-            padding-right: 10px; /* For scrollbar */
-            flex-grow: 1;
-        }
-        .popup h2 {
-            font-size: 1.4rem;
-            margin-top: 0;
-            flex-shrink: 0;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #000; /* 黒色に変更 */
-            line-height: 1;
-        }
-        .popup-icon {
-            width: 100px; /* 大きくする */
-            height: 100px; /* 大きくする */
-            margin: 15px auto;
-            flex-shrink: 0;
-            object-fit: contain; /* 画像を引き伸ばさない */
-        }
-        .popup-details {
-            font-size: 1rem;
-            line-height: 1.7;
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
-        .hidden {
-            display: none;
-        }
-        
-        /* Frame4 specific styles */
-        .transport-info {
-            width: 85%;
-            margin: 20px auto 0 auto;
-            padding: 15px;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-        .transport-info h2 { font-size: 1rem; }
-        .transport-info h3 { font-size: 0.9rem; color: #333; margin-top: 15px; }
-        .transport-info p { margin: 5px 0; font-size: 0.85rem; }
-        .transport-info u { color: var(--secondary-color); }
-        
-        /* Frame5 specific styles */
-        #frame5 p {
-            margin: 15px 0;
-        }
-        #close-failure-btn {
-            cursor: pointer;
-            padding: 10px 20px;
-            text-decoration: none; /* 下線を削除 */
-            border: 1px solid #000; /* 枠線を黒に */
-            border-radius: 8px; /* 角丸 */
-            display: inline-block; /* 枠線がテキストの周りに来るように */
-            margin-top: 20px;
-            color: #000; /* テキストを黒に */
-            font-weight: bold;
-        }
-        #close-failure-btn:hover {
-            background-color: #eee;
-        }
-    </style>
+    #time-selection-table {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .gate-column {
+        width: 48%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+    }
+    .gate-header {
+        margin-bottom: 10px;
+        flex-shrink: 0;
+        background-color: var(--light-gray); /* 背景をグレーに */
+        padding: 10px 5px;
+        border-radius: 6px;
+    }
+    .gate-header h3 {
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
+    }
+    .gate-header p {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #555;
+        line-height: 1.4; /* 行の高さを指定 */
+        min-height: 2.8em; /* 1.4em * 2行分 (ずれ修正) */
+    }
+    .time-slot {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-bottom: 8px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        height: 50px; /* 時間スロットの高さを揃える */
+        box-sizing: border-box;
+    }
+    .time-slot.selected {
+        background-color: var(--highlight-color);
+        border-color: var(--primary-color);
+        transform: scale(1.05);
+    }
+    .time-slot .crowd-icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+    
+    .info-label {
+        width: 100%;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 0.9rem;
+        box-sizing: border-box;
+    }
+    .info-transport {
+        background-color: var(--light-gray);
+        font-weight: bold;
+    }
+    .info-selection {
+        background-color: var(--highlight-color);
+        line-height: 1.6;
+        visibility: hidden;
+    }
+    .info-selection.visible {
+        visibility: visible;
+    }
+    
+    .btn-confirm {
+        background-color: var(--primary-color);
+        color: white;
+        width: calc(100% - 40px); /* frame3の左右padding分引く */
+        margin: 20px 20px 20px 20px; /* frame3のpaddingと合わせる */
+        padding: 18px;
+        flex-shrink: 0; /* スクロールさせない */
+    }
+    
+    .btn-confirm:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    /* ポップアップ */
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 10;
+    }
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 85%;
+        max-width: 400px;
+        background-color: white;
+        border: 3px solid black; /* 黒い縁取りを3pxに */
+        border-radius: 0; /* 角を四角に */
+        padding: 20px;
+        z-index: 20;
+        box-shadow: none; /* 外側の影を削除 */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        max-height: 84%;
+    }
+    .popup-content-scrollable {
+        overflow-y: auto;
+        padding-right: 10px; /* For scrollbar */
+        flex-grow: 1;
+    }
+    .popup h2 {
+        font-size: 1.4rem;
+        margin-top: 0;
+        flex-shrink: 0;
+    }
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 2rem;
+        cursor: pointer;
+        color: #000; /* 黒色に変更 */
+        line-height: 1;
+    }
+    .popup-icon {
+        width: 100px; /* 大きくする */
+        height: 100px; /* 大きくする */
+        margin: 15px auto;
+        flex-shrink: 0;
+        object-fit: contain; /* 画像を引き伸ばさない */
+    }
+    .popup-details {
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    .hidden {
+        display: none;
+    }
+    
+    /* Frame4 specific styles */
+    .transport-info {
+        width: 85%;
+        margin: 20px auto 0 auto;
+        padding: 15px;
+        background-color: var(--light-gray);
+        border-radius: 8px;
+        text-align: left;
+        font-size: 0.9rem;
+    }
+    .transport-info h2 { font-size: 1rem; }
+    .transport-info h3 { font-size: 0.9rem; color: #333; margin-top: 15px; }
+    .transport-info p { margin: 5px 0; font-size: 0.85rem; }
+    .transport-info u { color: var(--secondary-color); }
+    
+    /* Frame5 specific styles */
+    #frame5 p {
+        margin: 15px 0;
+    }
+    #close-failure-btn {
+        cursor: pointer;
+        padding: 10px 20px;
+        text-decoration: none; /* 下線を削除 */
+        border: 1px solid #000; /* 枠線を黒に */
+        border-radius: 8px; /* 角丸 */
+        display: inline-block; /* 枠線がテキストの周りに来るように */
+        margin-top: 20px;
+        color: #000; /* テキストを黒に */
+        font-weight: bold;
+    }
+    #close-failure-btn:hover {
+        background-color: #eee;
+    }
+</style>
+```
+
 </head>
 <body>
 
-    <div id="app-container">
-        
-        <!-- Frame 1: 難易度選択 -->
-        <div id="frame1" class="frame active">
-            <h1 class="app-header">万博入場予約ゲーム</h1>
-            <button id="btn-easy" class="btn btn-easy">Easy</button>
-            <button id="btn-normal" class="btn btn-normal">Normal</button>
-            <button id="btn-hard" class="btn btn-hard">Hard</button>
-            <div class="footer-notes">
-                <p class="disclaimer">このサイトはフェイクです。<br>実際に予約はできません。</p>
-                <p class="copyright">Made by <a href="https://github.com/chilu-da" target="_blank" rel="noopener noreferrer">Chilu-da</a></p>
-            </div>
+```
+<div id="app-container">
+    
+    <!-- Frame 1: 難易度選択 -->
+    <div id="frame1" class="frame active">
+        <h1 class="app-header">万博入場予約ゲーム</h1>
+        <button id="btn-easy" class="btn btn-easy">Easy</button>
+        <button id="btn-normal" class="btn btn-normal">Normal</button>
+        <button id="btn-hard" class="btn btn-hard">Hard</button>
+        <div class="footer-notes">
+            <p class="disclaimer">このサイトはフェイクです。<br>実際に予約はできません。</p>
+            <p class="copyright">Made by <a href="https://github.com/chilu-da" target="_blank" rel="noopener noreferrer">Chilu-da</a></p>
         </div>
+    </div>
 
-        
-        <!-- Frame 2: カレンダー -->
-        <div id="frame2" class="frame">
-            <h1>来場希望日</h1>
-            <!-- リセットアイコン (一本の矢印に変更) -->
-            <svg class="settings-icon" id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="23 4 23 10 17 10"></polyline>
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-            </svg>
-            <div id="calendar-header-container">
-                <button id="prev-month-btn" class="month-nav-btn">&lt;</button>
-                <h2 id="calendar-header"></h2>
-                <button id="next-month-btn" class="month-nav-btn">&gt;</button>
-            </div>
-            <div id="calendar-day-names-grid"></div>
-            <div id="calendar-grid"></div>
+    
+    <!-- Frame 2: カレンダー -->
+    <div id="frame2" class="frame">
+        <h1>来場希望日</h1>
+        <!-- リセットアイコン (一本の矢印に変更) -->
+        <svg class="settings-icon" id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        <div id="calendar-header-container">
+            <button id="prev-month-btn" class="month-nav-btn">&lt;</button>
+            <h2 id="calendar-header"></h2>
+            <button id="next-month-btn" class="month-nav-btn">&gt;</button>
         </div>
+        <div id="calendar-day-names-grid"></div>
+        <div id="calendar-grid"></div>
+    </div>
 
-        
-        <!-- Frame 3: 時間選択 -->
-        <div id="frame3" class="frame">
-            <div id="frame3-header">
-                <div id="back-to-calendar-btn" class="back-btn">&lt;</div>
-            </div>
-            <div id="frame3-scroll-container">
-                <div id="time-selection-table">
-                    <div class="gate-column">
-                        <div class="gate-header">
-                            <h3>東ゲート</h3>
-                            <p>地下鉄・自転車・障がい者用駐車場</p>
-                        </div>
-                        <div class="time-slot" data-gate="東ゲート" data-time-index="0"></div>
-                        <div class="time-slot" data-gate="東ゲート" data-time-index="1"></div>
-                        <div class="time-slot" data-gate="東ゲート" data-time-index="2"></div>
-                        <div class="time-slot" data-gate="東ゲート" data-time-index="3"></div>
-                        <div class="time-slot" data-gate="東ゲート" data-time-index="4"></div>
+    
+    <!-- Frame 3: 時間選択 -->
+    <div id="frame3" class="frame">
+        <div id="frame3-header">
+            <div id="back-to-calendar-btn" class="back-btn">&lt;</div>
+        </div>
+        <div id="frame3-scroll-container">
+            <div id="time-selection-table">
+                <div class="gate-column">
+                    <div class="gate-header">
+                        <h3>東ゲート</h3>
+                        <p>地下鉄・自転車・障がい者用駐車場</p>
                     </div>
-                    <div class="gate-column">
-                        <div class="gate-header">
-                            <h3>西ゲート</h3>
-                            <p>&nbsp;</p> <!-- 高さを揃えるための空白 -->
-                        </div>
-                        <div class="time-slot" data-gate="西ゲート" data-time-index="0"></div>
-                        <div class="time-slot" data-gate="西ゲート" data-time-index="1"></div>
-                        <div class="time-slot" data-gate="西ゲート" data-time-index="2"></div>
-                        <div class="time-slot" data-gate="西ゲート" data-time-index="3"></div>
-                        <div class="time-slot" data-gate="西ゲート" data-time-index="4"></div>
-                    </div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="0"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="1"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="2"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="3"></div>
+                    <div class="time-slot" data-gate="東ゲート" data-time-index="4"></div>
                 </div>
-                <div class="info-label info-transport"><u>会場への交通手段の手順はこちら</u></div>
-                <div id="selection-summary" class="info-label info-selection"></div>
+                <div class="gate-column">
+                    <div class="gate-header">
+                        <h3>西ゲート</h3>
+                        <p>&nbsp;</p> <!-- 高さを揃えるための空白 -->
+                    </div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="0"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="1"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="2"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="3"></div>
+                    <div class="time-slot" data-gate="西ゲート" data-time-index="4"></div>
+                </div>
             </div>
-            <button id="btn-confirm" class="btn btn-confirm">来場日時を設定する</button>
+            <div class="info-label info-transport"><u>会場への交通手段の手順はこちら</u></div>
+            <div id="selection-summary" class="info-label info-selection"></div>
+        </div>
+        <button id="btn-confirm" class="btn btn-confirm">来場日時を設定する</button>
+    </div>
+</div>
+
+
+<!-- オーバーレイ -->
+<div id="overlay" class="hidden"></div>
+
+
+<!-- Frame 4: 成功ポップアップ -->
+<div id="frame4" class="popup hidden">
+    <span class="close-btn">&times;</span>
+    <h2>来場日時が<br>設定されました</h2>
+    <div class="popup-content-scrollable">
+        <!-- カレンダーアイコンを画像に変更 -->
+        <img src="calendar.png" class="popup-icon" alt="カレンダーアイコン">
+        <div id="success-details" class="popup-details"></div>
+        <div class="transport-info">
+            <h2>会場への交通手段について事前予約が必要なものがあります。<br>以下よりご確認ください。</h2>
+            <h3>＜東ゲートから入場となる交通手段＞</h3>
+            <p>■地下鉄</p>
+            <p>事前予約は必要ありません。</p>
+            <p><u>経路検索はこちら</u></p>
+            <br>
+            <p>■自転車・障がい者用駐車場</p>
+            <p>前日までに駐輪場や駐車場の予約が必要です。</p>
+            <p><u>空き状況確認、事前予約はこちら</u></p>
         </div>
     </div>
+</div>
 
-    
-    <!-- オーバーレイ -->
-    <div id="overlay" class="hidden"></div>
 
-    
-    <!-- Frame 4: 成功ポップアップ -->
-    <div id="frame4" class="popup hidden">
-        <span class="close-btn">&times;</span>
-        <h2>来場日時が<br>設定されました</h2>
-        <div class="popup-content-scrollable">
-            <!-- カレンダーアイコンを画像に変更 -->
-            <img src="calendar.png" class="popup-icon" alt="カレンダーアイコン">
-            <div id="success-details" class="popup-details"></div>
-            <div class="transport-info">
-                <h2>会場への交通手段について事前予約が必要なものがあります。<br>以下よりご確認ください。</h2>
-                <h3>＜東ゲートから入場となる交通手段＞</h3>
-                <p>■地下鉄</p>
-                <p>事前予約は必要ありません。</p>
-                <p><u>経路検索はこちら</u></p>
-                <br>
-                <p>■自転車・障がい者用駐車場</p>
-                <p>前日までに駐輪場や駐車場の予約が必要です。</p>
-                <p><u>空き状況確認、事前予約はこちら</u></p>
-            </div>
-        </div>
-    </div>
+<!-- Frame 5: 失敗ポップアップ -->
+<div id="frame5" class="popup hidden">
+    <span class="close-btn">&times;</span>
+    <h2>定員を超えたため、ご希望<br>の時間帯は選択できませんでした</h2>
+    <p>お手数ですが、来場日時を再度選択し<br>てください。</p>
+    <div id="close-failure-btn"><u>とじる</u></div>
+</div>
 
-    
-    <!-- Frame 5: 失敗ポップアップ -->
-    <div id="frame5" class="popup hidden">
-        <span class="close-btn">&times;</span>
-        <h2>定員を超えたため、ご希望<br>の時間帯は選択できませんでした</h2>
-        <p>お手数ですが、来場日時を再度選択し<br>てください。</p>
-        <div id="close-failure-btn"><u>とじる</u></div>
-    </div>
+<script>
+    const App = {
+        // アプリケーションの状態を管理
+        state: {
+            difficulty: null,
+            displayYear: 2025,
+            month: null, // 0-indexed (3=4月, 8=9月, 9=10月)
+            selectedDateElement: null, // DOM要素を保持
+            selectedDateStr: null,     // 日付文字列を保持 'YYYY-MM-DD'
+            dailyTimeSlotData: {},     // { 'YYYY-MM-DD': { east: [level, ...], west: [level, ...] } }
+            selectedTimeSlotElement: null, // DOM要素を保持
+            selectedTimeSlotData: null,    // { gate: '東ゲート', timeIndex: 0, level: 'available' }
+            failureIncrease: 0, // 予約失敗上昇確率
+            probabilityTimer: null, // 確率変動タイマー
+        },
 
-    <script>
-        const App = {
-            // アプリケーションの状態を管理
-            state: {
-                difficulty: null,
-                year: 2025,
-                month: null, // 0-indexed (3=4月, 8=9月, 9=10月)
-                selectedDateElement: null, // DOM要素を保持
-                selectedDateStr: null,     // 日付文字列を保持 'YYYY-MM-DD'
-                dailyTimeSlotData: {},     // { 'YYYY-MM-DD': { east: [level, ...], west: [level, ...] } }
-                selectedTimeSlotElement: null, // DOM要素を保持
-                selectedTimeSlotData: null,    // { gate: '東ゲート', timeIndex: 0, level: 'available' }
-                failureIncrease: 0, // 予約失敗上昇確率
-                probabilityTimer: null, // 確率変動タイマー
-            },
+        // 定数
+        constants: {
+            timeStrings: ['9:00', '10:00', '11:00', '12:00', '17:00'],
+            iconImages: {}, // 画像パスを格納
+        },
 
-            // 定数
-            constants: {
-                timeStrings: ['9:00', '10:00', '11:00', '12:00', '17:00'],
-                iconImages: {}, // 画像パスを格納
-            },
+        // 要素の参照をキャッシュ
+        elements: {
+            frames: document.querySelectorAll('.frame'),
+            btnEasy: document.getElementById('btn-easy'),
+            btnNormal: document.getElementById('btn-normal'),
+            btnHard: document.getElementById('btn-hard'),
+            settingsIcon: document.getElementById('settings-icon'),
+            calendarHeader: document.getElementById('calendar-header'),
+            prevMonthBtn: document.getElementById('prev-month-btn'), // 追加
+            nextMonthBtn: document.getElementById('next-month-btn'), // 追加
+            calendarDayNamesGrid: document.getElementById('calendar-day-names-grid'),
+            calendarGrid: document.getElementById('calendar-grid'),
+            backToCalendarBtn: document.getElementById('back-to-calendar-btn'),
+            timeSlots: document.querySelectorAll('.time-slot'),
+            selectionSummary: document.getElementById('selection-summary'),
+            btnConfirm: document.getElementById('btn-confirm'),
+            overlay: document.getElementById('overlay'),
+            successPopup: document.getElementById('frame4'),
+            failurePopup: document.getElementById('frame5'),
+            successDetails: document.getElementById('success-details'),
+            closeFailureBtn: document.getElementById('close-failure-btn'),
+        },
 
-            // 要素の参照をキャッシュ
-            elements: {
-                frames: document.querySelectorAll('.frame'),
-                btnEasy: document.getElementById('btn-easy'),
-                btnNormal: document.getElementById('btn-normal'),
-                btnHard: document.getElementById('btn-hard'),
-                settingsIcon: document.getElementById('settings-icon'),
-                calendarHeader: document.getElementById('calendar-header'),
-                prevMonthBtn: document.getElementById('prev-month-btn'), // 追加
-                nextMonthBtn: document.getElementById('next-month-btn'), // 追加
-                calendarDayNamesGrid: document.getElementById('calendar-day-names-grid'),
-                calendarGrid: document.getElementById('calendar-grid'),
-                backToCalendarBtn: document.getElementById('back-to-calendar-btn'),
-                timeSlots: document.querySelectorAll('.time-slot'),
-                selectionSummary: document.getElementById('selection-summary'),
-                btnConfirm: document.getElementById('btn-confirm'),
-                overlay: document.getElementById('overlay'),
-                successPopup: document.getElementById('frame4'),
-                failurePopup: document.getElementById('frame5'),
-                successDetails: document.getElementById('success-details'),
-                closeFailureBtn: document.getElementById('close-failure-btn'),
-            },
+        // 初期化処理
+        init() {
+            this.loadIconImagePaths();
+            this.setupEventListeners();
+        },
 
-            // 初期化処理
-            init() {
-                this.loadIconImagePaths();
-                this.setupEventListeners();
-            },
+        // イベントリスナーを設定
+        setupEventListeners() {
+            this.elements.btnEasy.addEventListener('click', () => this.startGame('Easy'));
+            this.elements.btnNormal.addEventListener('click', () => this.startGame('Normal'));
+            this.elements.btnHard.addEventListener('click', () => this.startGame('Hard'));
+            this.elements.settingsIcon.addEventListener('click', () => this.navigateTo('frame1')); // リセットアイコン
 
-            // イベントリスナーを設定
-            setupEventListeners() {
-                this.elements.btnEasy.addEventListener('click', () => this.startGame('Easy'));
-                this.elements.btnNormal.addEventListener('click', () => this.startGame('Normal'));
-                this.elements.btnHard.addEventListener('click', () => this.startGame('Hard'));
-                this.elements.settingsIcon.addEventListener('click', () => this.navigateTo('frame1')); // リセットアイコン
+            // 月移動ボタン
+            this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
+            this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
 
-                // 月移動ボタン
-                this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
-                this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
+            this.elements.backToCalendarBtn.addEventListener('click', () => this.navigateTo('frame2'));
 
-                this.elements.backToCalendarBtn.addEventListener('click', () => this.navigateTo('frame2'));
-
-                this.elements.timeSlots.forEach(slot => {
-                    slot.addEventListener('click', () => this.selectTimeSlot(slot));
-                });
-                
-                this.elements.btnConfirm.addEventListener('click', () => this.confirmBooking());
-                
-                // 成功ポップアップのクローズ処理
-                const closeSuccessPopup = () => {
-                    this.hidePopups();
-                    this.navigateTo('frame1');
-                };
-                this.elements.successPopup.querySelector('.close-btn').addEventListener('click', closeSuccessPopup);
-                
-                // 失敗ポップアップのクローズ処理
-                const closeFailurePopup = () => {
-                    this.hidePopups();
-                    this.navigateTo('frame2');
-                    // 時間情報はリセットしない
-                };
-                this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', closeFailurePopup);
-                this.elements.closeFailureBtn.addEventListener('click', closeFailurePopup);
-
-                // オーバーレイのクリック処理 (修正)
-                this.elements.overlay.addEventListener('click', () => {
-                    if (!this.elements.successPopup.classList.contains('hidden')) {
-                        // 成功ポップアップが表示されている場合
-                        closeSuccessPopup();
-                    } else if (!this.elements.failurePopup.classList.contains('hidden')) {
-                        // 失敗ポップアップが表示されている場合
-                        closeFailurePopup();
-                    } else {
-                        // 予期しないケース
-                        this.hidePopups();
-                    }
-                });
-            },
-
-            // ゲーム開始
-            startGame(difficulty) {
-                this.state.difficulty = difficulty;
-                this.state.dailyTimeSlotData = {}; // データをリセット
-                this.state.selectedDateElement = null; // 選択状態をリセット
-                this.state.selectedDateStr = null;
-                this.state.selectedTimeSlotElement = null;
-                this.state.selectedTimeSlotData = null; // 難易度変更時は時間選択もリセット
-                
-                // Easy: 4月 (3), Normal: 9月 (8), Hard: 9月 (8) スタート
-                const monthMap = { 'Easy': 3, 'Normal': 8, 'Hard': 8 };
-                this.state.month = monthMap[difficulty];
-                
-                this.buildCalendar();
+            this.elements.timeSlots.forEach(slot => {
+                slot.addEventListener('click', () => this.selectTimeSlot(slot));
+            });
+            
+            this.elements.btnConfirm.addEventListener('click', () => this.confirmBooking());
+            
+            // 成功ポップアップのクローズ処理
+            const closeSuccessPopup = () => {
+                this.hidePopups();
+                this.navigateTo('frame1');
+            };
+            this.elements.successPopup.querySelector('.close-btn').addEventListener('click', closeSuccessPopup);
+            
+            // 失敗ポップアップのクローズ処理
+            const closeFailurePopup = () => {
+                this.hidePopups();
                 this.navigateTo('frame2');
-            },
+                // 時間情報はリセットしない
+            };
+            this.elements.failurePopup.querySelector('.close-btn').addEventListener('click', closeFailurePopup);
+            this.elements.closeFailureBtn.addEventListener('click', closeFailurePopup);
 
-            // 画面遷移
-            navigateTo(frameId) {
-                // 確率変動タイマーの管理
-                if (this.state.probabilityTimer) {
-                    clearInterval(this.state.probabilityTimer);
-                    this.state.probabilityTimer = null;
+            // オーバーレイのクリック処理 (修正)
+            this.elements.overlay.addEventListener('click', () => {
+                if (!this.elements.successPopup.classList.contains('hidden')) {
+                    // 成功ポップアップが表示されている場合
+                    closeSuccessPopup();
+                } else if (!this.elements.failurePopup.classList.contains('hidden')) {
+                    // 失敗ポップアップが表示されている場合
+                    closeFailurePopup();
+                } else {
+                    // 予期しないケース
+                    this.hidePopups();
                 }
+            });
+        },
 
-                if (frameId === 'frame3') {
-                    // frame3に移動するとき、タイマーを起動
-                    this.state.failureIncrease = 0; // 失敗確率をリセット
-                    this.state.probabilityTimer = setInterval(() => {
-                        this.state.failureIncrease = Math.min(1.0, this.state.failureIncrease + 0.05); // 5%ずつ上昇 (最大100%)
-                    }, 500); // 0.5秒ごと
-                }
-                
-                this.elements.frames.forEach(frame => {
-                    frame.classList.toggle('active', frame.id === frameId);
-                });
-            },
-
-            // 月移動
-            changeMonth(direction) {
-                const { month, difficulty } = this.state;
-                let newMonth = month + direction;
-
-                // 10月(9)から次を押したら1月(0)へ
-                if (month === 9 && direction === 1) {
-                    newMonth = 0;
-                }
-                // 1月(0)から前を押したら10月(9)へ
-                else if (month === 0 && direction === -1) {
-                    newMonth = 9;
-                }
-                
-                // 範囲外の移動は無視 (ボタンは既無効化されているはずだが、念のため)
-                if (newMonth < 0 || (newMonth > 3 && newMonth < 8) || newMonth > 9) {
-                    // 1月(0)と4月～10月(3～9)以外は無効
-                    if (!(newMonth === 0 || (newMonth >= 3 && newMonth <= 9))) return;
-                }
-                // 難易度別制限（1月は難易度に関係なく追加されるため、除外）
-                if (difficulty === 'Normal' && newMonth < 8 && newMonth !== 0) return;
-                if (difficulty === 'Hard' && newMonth < 8 && newMonth !== 0) return;
-
-                this.state.month = newMonth;
-                
-                this.state.dailyTimeSlotData = {}; 
-
-                // 月を切り替えたら日付選択は解除
-                this.state.selectedDateElement = null;
-                this.state.selectedDateStr = null;
-                // selectedTimeSlotData は保持する
-                
-                this.buildCalendar(); // カレンダーを再描画
-            },
+        // ゲーム開始
+        startGame(difficulty) {
+            this.state.difficulty = difficulty;
+            this.state.displayYear = 2025;
+            this.state.dailyTimeSlotData = {}; // データをリセット
+            this.state.selectedDateElement = null; // 選択状態をリセット
+            this.state.selectedDateStr = null;
+            this.state.selectedTimeSlotElement = null;
+            this.state.selectedTimeSlotData = null; // 難易度変更時は時間選択もリセット
             
-            // 現在の月に対応する年を取得（1月の場合は2026年、それ以外は2025年）
-            getCurrentYear() {
-                return this.state.month === 0 ? 2026 : 2025;
-            },
-
-            // カレンダー構築
-            buildCalendar() {
-                const year = this.getCurrentYear();
-                this.elements.calendarHeader.textContent = `${year}年${this.state.month + 1}月`;
-                this.updateMonthNavButtons(); // ボタンの無効化処理
-                this.buildCalendarDayNames();
-                this.populateCalendarGrid();
-            },
-
-            // 月移動ボタンの更新
-            updateMonthNavButtons() {
-                const { month, difficulty } = this.state;
-                const prevBtn = this.elements.prevMonthBtn;
-                const nextBtn = this.elements.nextMonthBtn;
-                
-                prevBtn.disabled = false;
-                nextBtn.disabled = false;
-
-                // 1月の場合
-                if (month === 0) {
-                    prevBtn.disabled = false; // 1月から前ボタンで10月に戻れる
-                    nextBtn.disabled = true; // 1月より後には行けない（2月以降は存在しない）
-                }
-                // 全体の範囲 (4月～10月)
-                else if (month <= 3) {
-                    prevBtn.disabled = true; // 4月
-                }
-                else if (month === 9) {
-                    nextBtn.disabled = false; // 10月の次は1月へ行ける
-                }
-
-                // 難易度別（1月は除外）
-                if (difficulty === 'Normal' && month !== 0) {
-                    if (month <= 8 && month >= 3) prevBtn.disabled = true; // 9月より前には行けない（1月を除く）
-                }
-                if (difficulty === 'Hard' && month !== 0) {
-                    if (month <= 8 && month >= 3) prevBtn.disabled = true; // 9月より前には行けない（1月を除く）
-                }
-            },
+            // Easy: 4月 (3), Normal: 9月 (8), Hard: 9月 (8) スタート
+            const monthMap = { 'Easy': 3, 'Normal': 8, 'Hard': 8 };
+            this.state.month = monthMap[difficulty];
             
-            buildCalendarDayNames() {
-                this.elements.calendarDayNamesGrid.innerHTML = '';
-                const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
-                const dayClasses = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-                dayNames.forEach((name, i) => {
-                    const dayEl = document.createElement('div');
-                    dayEl.className = `calendar-day-name day-name-${dayClasses[i]}`;
-                    dayEl.textContent = name;
-                    this.elements.calendarDayNamesGrid.appendChild(dayEl);
-                });
-            },
-            
-            populateCalendarGrid() {
-                this.elements.calendarGrid.innerHTML = '';
-                const month = this.state.month;
-                const year = this.getCurrentYear();
-                
-                const firstDay = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-                const daysInPrevMonth = new Date(year, month, 0).getDate();
-                
-                let date = 1; // 当月の日付カウンター
-                let nextMonthDate = 1; // 翌月の日付カウンター
+            this.buildCalendar();
+            this.navigateTo('frame2');
+        },
 
-                for (let i = 0; i < 5 * 7; i++) { // 5行 x 7列
-                    const cell = document.createElement('div');
-                    cell.className = 'calendar-date';
+        // 画面遷移
+        navigateTo(frameId) {
+            // 確率変動タイマーの管理
+            if (this.state.probabilityTimer) {
+                clearInterval(this.state.probabilityTimer);
+                this.state.probabilityTimer = null;
+            }
+
+            if (frameId === 'frame3') {
+                // frame3に移動するとき、タイマーを起動
+                this.state.failureIncrease = 0; // 失敗確率をリセット
+                this.state.probabilityTimer = setInterval(() => {
+                    this.state.failureIncrease = Math.min(1.0, this.state.failureIncrease + 0.05); // 5%ずつ上昇 (最大100%)
+                }, 500); // 0.5秒ごと
+            }
+            
+            this.elements.frames.forEach(frame => {
+                frame.classList.toggle('active', frame.id === frameId);
+            });
+        },
+
+        // 月移動
+        changeMonth(direction) {
+            const seq = this.getMonthSequence();
+            const idx = this.getCurrentSequenceIndex();
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= seq.length) return;
+
+            this.state.displayYear = seq[newIdx].year;
+            this.state.month = seq[newIdx].month;
+            this.state.dailyTimeSlotData = {};
+            this.state.selectedDateElement = null;
+            this.state.selectedDateStr = null;
+
+            this.buildCalendar();
+        },
+
+        // 有効な月シーケンスを難易度別に返す
+        getMonthSequence() {
+            const full = [
+                {year:2025, month:3}, {year:2025, month:4}, {year:2025, month:5},
+                {year:2025, month:6}, {year:2025, month:7}, {year:2025, month:8},
+                {year:2025, month:9}, {year:2026, month:0}, {year:2026, month:4}
+            ];
+            if (this.state.difficulty === 'Easy') return full;
+            return full.filter(m => !(m.year === 2025 && m.month < 8));
+        },
+
+        // 現在のシーケンス内インデックスを取得
+        getCurrentSequenceIndex() {
+            const seq = this.getMonthSequence();
+            return seq.findIndex(s => s.year === this.state.displayYear && s.month === this.state.month);
+        },
+        
+        // 現在の月に対応する年を取得
+        getCurrentYear() {
+            return this.state.displayYear;
+        },
+
+        // カレンダー構築
+        buildCalendar() {
+            const year = this.getCurrentYear();
+            this.elements.calendarHeader.textContent = `${year}年${this.state.month + 1}月`;
+            this.updateMonthNavButtons(); // ボタンの無効化処理
+            this.buildCalendarDayNames();
+            this.populateCalendarGrid();
+        },
+
+        // 月移動ボタンの更新
+        updateMonthNavButtons() {
+            const seq = this.getMonthSequence();
+            const idx = this.getCurrentSequenceIndex();
+            this.elements.prevMonthBtn.disabled = (idx <= 0);
+            this.elements.nextMonthBtn.disabled = (idx >= seq.length - 1);
+        },
+        
+        buildCalendarDayNames() {
+            this.elements.calendarDayNamesGrid.innerHTML = '';
+            const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+            const dayClasses = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            dayNames.forEach((name, i) => {
+                const dayEl = document.createElement('div');
+                dayEl.className = `calendar-day-name day-name-${dayClasses[i]}`;
+                dayEl.textContent = name;
+                this.elements.calendarDayNamesGrid.appendChild(dayEl);
+            });
+        },
+        
+        populateCalendarGrid() {
+            this.elements.calendarGrid.innerHTML = '';
+            const month = this.state.month;
+            const year = this.getCurrentYear();
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            let date = 1; // 当月の日付カウンター
+            let nextMonthDate = 1; // 翌月の日付カウンター
+
+            for (let i = 0; i < 5 * 7; i++) { // 5行 x 7列
+                const cell = document.createElement('div');
+                cell.className = 'calendar-date';
+                
+                if (i < firstDay) {
+                    // 前月
+                    cell.classList.add('other-month');
+                    const prevMonthDate = daysInPrevMonth - firstDay + i + 1;
+                    cell.innerHTML = `<span class="date-number">${prevMonthDate}</span>`;
+                } else if (date > daysInMonth) {
+                    // 翌月
+                    cell.classList.add('other-month');
+                    cell.innerHTML = `<span class="date-number">${nextMonthDate}</span>`;
+                    nextMonthDate++;
+                } else {
+                    // 当月
+                    const currentDate = new Date(year, month, date);
                     
-                    if (i < firstDay) {
-                        // 前月
-                        cell.classList.add('other-month');
-                        const prevMonthDate = daysInPrevMonth - firstDay + i + 1;
-                        cell.innerHTML = `<span class="date-number">${prevMonthDate}</span>`;
-                    } else if (date > daysInMonth) {
-                        // 翌月
-                        cell.classList.add('other-month');
-                        cell.innerHTML = `<span class="date-number">${nextMonthDate}</span>`;
-                        nextMonthDate++;
-                    } else {
-                        // 当月
-                        const currentDate = new Date(year, month, date);
-                        
-                        const dateNumber = document.createElement('span');
-                        dateNumber.className = 'date-number';
-                        dateNumber.textContent = date;
-                        cell.appendChild(dateNumber);
+                    const dateNumber = document.createElement('span');
+                    dateNumber.className = 'date-number';
+                    dateNumber.textContent = date;
+                    cell.appendChild(dateNumber);
 
-                        const y = currentDate.getFullYear();
-                        const m = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-                        const d = currentDate.getDate().toString().padStart(2, '0');
-                        const dateStr = `${y}-${m}-${d}`; // 'YYYY-MM-DD' (ローカル基準)
+                    const y = currentDate.getFullYear();
+                    const m = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                    const d = currentDate.getDate().toString().padStart(2, '0');
+                    const dateStr = `${y}-${m}-${d}`; // 'YYYY-MM-DD' (ローカル基準)
 
-                        cell.dataset.date = dateStr; // dateStrは常に設定
-                        
-                        if (currentDate.getDay() === 0 || this.isHoliday(year, month + 1, date)) {
-                            dateNumber.classList.add('date-sun');
-                        } else if (currentDate.getDay() === 6) {
-                            dateNumber.classList.add('date-sat');
-                        }
-
-                        // dailyTimeSlotDataがなければ生成
-                        if (!this.state.dailyTimeSlotData[dateStr]) {
-                            this.state.dailyTimeSlotData[dateStr] = this.generateDailyTimeSlotData();
-                        }
-                        
-                        const dailyData = this.state.dailyTimeSlotData[dateStr];
-                        const dayLevel = this.determineDayLevel(dailyData);
-
-                        const iconContainer = this.getDailyCrowdIconElement(year, month + 1, date, dateStr, dayLevel);
-                        cell.appendChild(iconContainer);
-
-                        const hasPlaceholder = iconContainer.classList.contains('placeholder');
-                        
-                        if (hasPlaceholder) {
-                             cell.classList.add('other-month'); // プレースホルダーがある場合はグレーアウト
-                             cell.style.cursor = 'default';
-                        } else if (dayLevel === 'full') {
-                            cell.style.cursor = 'default'; // 赤い日もクリック不可
-                        } else {
-                            // クリック可能な場合のみイベントリスナーを設定
-                            cell.addEventListener('click', () => {
-                                this.selectDate(cell);
-                            });
-                        }
-
-                        // 選択済みの日付があればハイライト
-                        if (this.state.selectedDateStr === dateStr) {
-                            cell.classList.add('selected');
-                            this.state.selectedDateElement = cell;
-                        }
-                        
-                        date++; // 当月の日付をインクリメント
+                    cell.dataset.date = dateStr; // dateStrは常に設定
+                    
+                    if (currentDate.getDay() === 0 || this.isHoliday(year, month + 1, date)) {
+                        dateNumber.classList.add('date-sun');
+                    } else if (currentDate.getDay() === 6) {
+                        dateNumber.classList.add('date-sat');
                     }
-                    this.elements.calendarGrid.appendChild(cell);
-                }
-            },
-            
-            isHoliday(year, month, day) {
-                // 2025年の祝日
-                if (year === 2025) {
-                    const holidays = { 4: [29], 5: [3], 9: [15, 23], 10: [13] };
-                    return holidays[month] && holidays[month].includes(day);
-                }
-                // 2026年の祝日（1月のみ）
-                if (year === 2026 && month === 1) {
-                    const holidays = { 1: [1, 12] }; // 1月: 1日(元日), 12日(成人の日)
-                    return holidays[month] && holidays[month].includes(day);
-                }
-                return false;
-            },
-            
-            getDailyCrowdIconElement(year, month_1_indexed, day, dateStr, dayLevel) {
-                const { difficulty } = this.state;
-                let showIcon = false; // デフォルトは非表示
 
-                // 1月は難易度に関係なく追加
-                if (month_1_indexed === 1) {
+                    // dailyTimeSlotDataがなければ生成
+                    if (!this.state.dailyTimeSlotData[dateStr]) {
+                        this.state.dailyTimeSlotData[dateStr] = this.generateDailyTimeSlotData();
+                    }
+                    
+                    const dailyData = this.state.dailyTimeSlotData[dateStr];
+                    const dayLevel = this.determineDayLevel(dailyData);
+
+                    const iconContainer = this.getDailyCrowdIconElement(year, month + 1, date, dateStr, dayLevel);
+                    cell.appendChild(iconContainer);
+
+                    const hasPlaceholder = iconContainer.classList.contains('placeholder');
+                    
+                    if (hasPlaceholder) {
+                         cell.classList.add('other-month'); // プレースホルダーがある場合はグレーアウト
+                         cell.style.cursor = 'default';
+                    } else if (dayLevel === 'full') {
+                        cell.style.cursor = 'default'; // 赤い日もクリック不可
+                    } else {
+                        // クリック可能な場合のみイベントリスナーを設定
+                        cell.addEventListener('click', () => {
+                            this.selectDate(cell);
+                        });
+                    }
+
+                    // 選択済みの日付があればハイライト
+                    if (this.state.selectedDateStr === dateStr) {
+                        cell.classList.add('selected');
+                        this.state.selectedDateElement = cell;
+                    }
+                    
+                    date++; // 当月の日付をインクリメント
+                }
+                this.elements.calendarGrid.appendChild(cell);
+            }
+        },
+        
+        isHoliday(year, month, day) {
+            // 2025年の祝日
+            if (year === 2025) {
+                const holidays = { 4: [29], 5: [3], 9: [15, 23], 10: [13] };
+                return holidays[month] && holidays[month].includes(day);
+            }
+            // 2026年の祝日
+            if (year === 2026) {
+                const holidays = { 1: [1, 12], 5: [3, 4, 5, 6] };
+                return holidays[month] && holidays[month].includes(day);
+            }
+            return false;
+        },
+        
+        getDailyCrowdIconElement(year, month_1_indexed, day, dateStr, dayLevel) {
+            const { difficulty } = this.state;
+            let showIcon = false; // デフォルトは非表示
+
+            // 1月・2026年5月は難易度に関係なく追加
+            if (month_1_indexed === 1 || (year === 2026 && month_1_indexed === 5)) {
+                showIcon = true;
+            }
+            else if (difficulty === 'Easy') {
+                // 4/13以降、10/13まで
+                if ( (month_1_indexed > 4 || (month_1_indexed === 4 && day >= 13)) && 
+                     (month_1_indexed < 10 || (month_1_indexed === 10 && day <= 13)) ) {
                     showIcon = true;
                 }
-                else if (difficulty === 'Easy') {
-                    // 4/13以降、10/13まで
-                    if ( (month_1_indexed > 4 || (month_1_indexed === 4 && day >= 13)) && 
-                         (month_1_indexed < 10 || (month_1_indexed === 10 && day <= 13)) ) {
-                        showIcon = true;
-                    }
-                } else if (difficulty === 'Normal') {
-                    // 9/1から10/13まで
-                    if ( (month_1_indexed === 9) || (month_1_indexed === 10 && day <= 13) ) {
-                        showIcon = true;
-                    }
-                } else if (difficulty === 'Hard') {
-                    // 9/25から10/13まで
-                    if ( (month_1_indexed > 9 || (month_1_indexed === 9 && day >= 25)) &&
-                         (month_1_indexed < 10 || (month_1_indexed === 10 && day <= 13)) ) {
-                         showIcon = true;
-                    }
+            } else if (difficulty === 'Normal') {
+                // 9/1から10/13まで
+                if ( (month_1_indexed === 9) || (month_1_indexed === 10 && day <= 13) ) {
+                    showIcon = true;
                 }
-
-                const iconEl = document.createElement('img');
-                iconEl.className = 'crowd-icon';
-                
-                if (!showIcon) {
-                    const placeholder = document.createElement('div');
-                    placeholder.className = 'crowd-icon placeholder';
-                    return placeholder;
+            } else if (difficulty === 'Hard') {
+                // 9/25から10/13まで
+                if ( (month_1_indexed > 9 || (month_1_indexed === 9 && day >= 25)) &&
+                     (month_1_indexed < 10 || (month_1_indexed === 10 && day <= 13)) ) {
+                     showIcon = true;
                 }
-                
-                if (dayLevel === 'full') iconEl.src = this.constants.iconImages.red;
-                else if (dayLevel === 'available') iconEl.src = this.constants.iconImages.blue;
-                else iconEl.src = this.constants.iconImages.yellow;
+            }
 
-                return iconEl;
-            },
-
-            generateDailyTimeSlotData() {
-                const data = { east: [], west: [] };
-                for (let i = 0; i < 5; i++) {
-                    data.east.push(this.getRandomTimeSlotLevel(i));
-                    data.west.push(this.getRandomTimeSlotLevel(i));
-                }
-                return data;
-            },
-
-            getRandomTimeSlotLevel(timeIndex) {
-                const { difficulty } = this.state;
-                
-                // ★修正点: 確率のベースを変更 (Easy と Normal)
-                const baseProbs = {
-                    Easy:   { blue: 0.55, red: 0.07 }, // (黄: 38%)
-                    Normal: { blue: 0.10, red: 0.40 }, // (黄: 50%)
-                    Hard:   { blue: 0.00, red: 0.999975, yellow: 0.000025 }, // (青:0%, 赤:99.9975%, 黄:0.0025%)
-                };
-
-                const probSet = baseProbs[difficulty];
-                let blueProb, redProb, yellowProb;
-                const adjustment = 0.005 * timeIndex; // 0.5%ずつ
-
-                if (difficulty === 'Hard') {
-                    // Hardの場合は adjustment を適用しない（yellow がほぼ0のため）
-                    yellowProb = probSet.yellow;
-                    redProb = probSet.red;
-                    blueProb = probSet.blue; // 0
-                } else {
-                    blueProb = probSet.blue + adjustment;
-                    redProb = probSet.red - adjustment;
-                   
-                    blueProb = Math.max(0, Math.min(1, blueProb));
-                    redProb = Math.max(0, Math.min(1, redProb));
-                    yellowProb = 1 - blueProb - redProb;
-                }
-                
-                yellowProb = Math.max(0, yellowProb);
-                
-                const rand = Math.random();
-                if (rand < blueProb) return 'available';
-                if (rand < blueProb + yellowProb) return 'congested';
-                return 'full';
-            },
+            const iconEl = document.createElement('img');
+            iconEl.className = 'crowd-icon';
             
-            determineDayLevel(dailyData) {
-                const allLevels = [...dailyData.east, ...dailyData.west];
-                
-                const blueCount = allLevels.filter(l => l === 'available').length;
-                if (blueCount > 0) return 'available'; 
-
-                const yellowCount = allLevels.filter(l => l === 'congested').length;
-                if (yellowCount > 0) return 'congested';
-
-                return 'full';
-            },
+            if (!showIcon) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'crowd-icon placeholder';
+                return placeholder;
+            }
             
-            selectDate(cell) {
-                if (this.state.selectedDateElement) {
-                    this.state.selectedDateElement.classList.remove('selected');
-                }
-                cell.classList.add('selected');
-                this.state.selectedDateElement = cell;
-                this.state.selectedDateStr = cell.dataset.date;
-                
-                this.populateTimeSlots();
-                this.updateSelectionSummary(); // 時間スロット描画後にサマリーを更新
-                this.navigateTo('frame3');
-            },
+            if (dayLevel === 'full') iconEl.src = this.constants.iconImages.red;
+            else if (dayLevel === 'available') iconEl.src = this.constants.iconImages.blue;
+            else iconEl.src = this.constants.iconImages.yellow;
 
-            populateTimeSlots() {
-                const dateStr = this.state.selectedDateStr;
-                const dailyData = this.state.dailyTimeSlotData[dateStr];
-                
-                this.elements.timeSlots.forEach(slot => slot.classList.remove('selected'));
-                this.state.selectedTimeSlotElement = null;
+            return iconEl;
+        },
 
+        generateDailyTimeSlotData() {
+            const data = { east: [], west: [] };
+            for (let i = 0; i < 5; i++) {
+                data.east.push(this.getRandomTimeSlotLevel(i));
+                data.west.push(this.getRandomTimeSlotLevel(i));
+            }
+            return data;
+        },
 
-                this.elements.timeSlots.forEach(slot => {
-                    const gateKey = slot.dataset.gate === '東ゲート' ? 'east' : 'west';
-                    const timeIndex = parseInt(slot.dataset.timeIndex, 10);
-                    const level = dailyData[gateKey][timeIndex];
-                    const time = this.constants.timeStrings[timeIndex];
-
-                    slot.dataset.level = level;
-                    
-                    let iconSrc = '';
-                    if (level === 'available') iconSrc = this.constants.iconImages.blue;
-                    else if (level === 'congested') iconSrc = this.constants.iconImages.yellow;
-                    else if (level === 'full') iconSrc = this.constants.iconImages.red;
-                    
-                    slot.innerHTML = `
-                        <img src="${iconSrc}" class="crowd-icon" alt="${level}">
-                        <span>${time}-</span>
-                    `;
-
-                    if (this.state.selectedTimeSlotData &&
-                        this.state.selectedTimeSlotData.gate === slot.dataset.gate &&
-                        this.state.selectedTimeSlotData.timeIndex === timeIndex) {
-                        
-                        slot.classList.add('selected');
-                        this.state.selectedTimeSlotElement = slot; // DOM参照を更新
-                        
-                        this.state.selectedTimeSlotData.level = level; 
-                        
-                    }
-                });
-
-                if (!this.state.selectedTimeSlotData) {
-                    this.elements.btnConfirm.disabled = true;
-                } else if (this.state.selectedTimeSlotData.level === 'full') {
-                    this.elements.btnConfirm.disabled = true;
-                } else {
-                    this.elements.btnConfirm.disabled = false;
-                }
-            },
+        getRandomTimeSlotLevel(timeIndex) {
+            const { difficulty } = this.state;
             
-            selectTimeSlot(slot) {
-                if (this.state.selectedTimeSlotElement) {
-                    this.state.selectedTimeSlotElement.classList.remove('selected');
-                }
-                slot.classList.add('selected');
-                this.state.selectedTimeSlotElement = slot;
-                this.state.selectedTimeSlotData = {
-                    gate: slot.dataset.gate,
-                    timeIndex: parseInt(slot.dataset.timeIndex, 10),
-                    level: slot.dataset.level
-                };
-                this.updateSelectionSummary();
-                this.elements.selectionSummary.classList.add('visible');
+            // ★修正点: 確率のベースを変更 (Easy と Normal)
+            const baseProbs = {
+                Easy:   { blue: 0.55, red: 0.07 }, // (黄: 38%)
+                Normal: { blue: 0.10, red: 0.40 }, // (黄: 50%)
+                Hard:   { blue: 0.00, red: 0.999975, yellow: 0.000025 }, // (青:0%, 赤:99.9975%, 黄:0.0025%)
+            };
 
-                if (slot.dataset.level === 'full') {
-                    this.elements.btnConfirm.disabled = true;
-                } else {
-                    this.elements.btnConfirm.disabled = false;
-                }
-            },
+            const probSet = baseProbs[difficulty];
+            let blueProb, redProb, yellowProb;
+            const adjustment = 0.005 * timeIndex; // 0.5%ずつ
+
+            if (difficulty === 'Hard') {
+                // Hardの場合は adjustment を適用しない（yellow がほぼ0のため）
+                yellowProb = probSet.yellow;
+                redProb = probSet.red;
+                blueProb = probSet.blue; // 0
+            } else {
+                blueProb = probSet.blue + adjustment;
+                redProb = probSet.red - adjustment;
+               
+                blueProb = Math.max(0, Math.min(1, blueProb));
+                redProb = Math.max(0, Math.min(1, redProb));
+                yellowProb = 1 - blueProb - redProb;
+            }
             
-            updateSelectionSummary() {
-                if (!this.state.selectedDateStr || !this.state.selectedTimeSlotData) {
-                    this.elements.selectionSummary.classList.remove('visible');
-                    return;
-                }
-                
-                const parts = this.state.selectedDateStr.split('-');
-                const year = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1; // JSの月は0-indexed
-                const day = parseInt(parts[2], 10);
-                const date = new Date(year, month, day);
+            yellowProb = Math.max(0, yellowProb);
+            
+            const rand = Math.random();
+            if (rand < blueProb) return 'available';
+            if (rand < blueProb + yellowProb) return 'congested';
+            return 'full';
+        },
+        
+        determineDayLevel(dailyData) {
+            const allLevels = [...dailyData.east, ...dailyData.west];
+            
+            const blueCount = allLevels.filter(l => l === 'available').length;
+            if (blueCount > 0) return 'available'; 
 
-                const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
-                const dateFmt = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日(${dayOfWeekStr})`;
+            const yellowCount = allLevels.filter(l => l === 'congested').length;
+            if (yellowCount > 0) return 'congested';
 
-                const time = this.constants.timeStrings[this.state.selectedTimeSlotData.timeIndex];
-                const gate = this.state.selectedTimeSlotData.gate;
+            return 'full';
+        },
+        
+        selectDate(cell) {
+            if (this.state.selectedDateElement) {
+                this.state.selectedDateElement.classList.remove('selected');
+            }
+            cell.classList.add('selected');
+            this.state.selectedDateElement = cell;
+            this.state.selectedDateStr = cell.dataset.date;
+            
+            this.populateTimeSlots();
+            this.updateSelectionSummary(); // 時間スロット描画後にサマリーを更新
+            this.navigateTo('frame3');
+        },
+
+        populateTimeSlots() {
+            const dateStr = this.state.selectedDateStr;
+            const dailyData = this.state.dailyTimeSlotData[dateStr];
+            
+            this.elements.timeSlots.forEach(slot => slot.classList.remove('selected'));
+            this.state.selectedTimeSlotElement = null;
+
+
+            this.elements.timeSlots.forEach(slot => {
+                const gateKey = slot.dataset.gate === '東ゲート' ? 'east' : 'west';
+                const timeIndex = parseInt(slot.dataset.timeIndex, 10);
+                const level = dailyData[gateKey][timeIndex];
+                const time = this.constants.timeStrings[timeIndex];
+
+                slot.dataset.level = level;
                 
-                this.elements.selectionSummary.innerHTML = `
-                    来場日時: ${dateFmt} ${time}-<br>
-                    枚数: 1枚<br>
-                    【${gate}】
+                let iconSrc = '';
+                if (level === 'available') iconSrc = this.constants.iconImages.blue;
+                else if (level === 'congested') iconSrc = this.constants.iconImages.yellow;
+                else if (level === 'full') iconSrc = this.constants.iconImages.red;
+                
+                slot.innerHTML = `
+                    <img src="${iconSrc}" class="crowd-icon" alt="${level}">
+                    <span>${time}-</span>
                 `;
-                this.elements.selectionSummary.classList.add('visible');
-            },
-            
-            confirmBooking() {
-                if (!this.state.selectedTimeSlotData || this.state.selectedTimeSlotData.level === 'full') {
-                    console.warn('時間を選択してください、または選択された時間は予約できません。');
-                    return;
-                }
-                
-                const crowdLevel = this.state.selectedTimeSlotData.level;
-                
-                let baseSuccessRates;
-                const { difficulty } = this.state;
 
-                if (difficulty === 'Easy') {
-                    baseSuccessRates = {
-                        available: 0.98, // Easy (青): 98%
-                        congested: 0.90, // Easy (黄): 90%
-                        full: 0.05,      // (念のため設定)
-                    };
-                } else if (difficulty === 'Normal') {
-                    baseSuccessRates = {
-                        available: 0.75, // (デフォルト)
-                        congested: 0.20, // (デフォルト)
-                        full: 0.05,      // (デフォルト)
-                    };
-                } else if (difficulty === 'Hard') {
-                    baseSuccessRates = {
-                        available: 0.75, // (デフォルト)
-                        congested: 0.80, // Hard (黄): 80%
-                        full: 0.0001,    // (デフォルト)
-                    };
-                } else {
-                    // デフォルト (Normal相当)
-                    baseSuccessRates = {
-                        available: 0.75,
-                        congested: 0.20,
-                        full: 0.05,
-                    };
+                if (this.state.selectedTimeSlotData &&
+                    this.state.selectedTimeSlotData.gate === slot.dataset.gate &&
+                    this.state.selectedTimeSlotData.timeIndex === timeIndex) {
+                    
+                    slot.classList.add('selected');
+                    this.state.selectedTimeSlotElement = slot; // DOM参照を更新
+                    
+                    this.state.selectedTimeSlotData.level = level; 
+                    
                 }
-                
-                const baseRate = baseSuccessRates[crowdLevel] || 0;
-                // 時間経過による失敗確率を適用
-                const actualSuccessRate = Math.max(0, baseRate - this.state.failureIncrease);
-                
-                const success = Math.random() < actualSuccessRate;
-                
-                if (success) this.showSuccessPopup();
-                else this.showFailurePopup();
-            },
-            
-            showSuccessPopup() {
-                this.elements.successDetails.innerHTML = this.elements.selectionSummary.innerHTML;
-                this.elements.successPopup.classList.remove('hidden');
-                this.elements.overlay.classList.remove('hidden');
-            },
-            showFailurePopup() {
-                this.elements.failurePopup.classList.remove('hidden');
-                this.elements.overlay.classList.remove('hidden');
-            },
-            hidePopups() {
-                this.elements.successPopup.classList.add('hidden');
-                this.elements.failurePopup.classList.add('hidden');
-                this.elements.overlay.classList.add('hidden');
-            },
+            });
 
-            // 画像のパスを読み込む
-            loadIconImagePaths() {
-                this.constants.iconImages = {
-                    blue: 'blue.png',
-                    yellow: 'yellow.png',
-                    red: 'red.png'
+            if (!this.state.selectedTimeSlotData) {
+                this.elements.btnConfirm.disabled = true;
+            } else if (this.state.selectedTimeSlotData.level === 'full') {
+                this.elements.btnConfirm.disabled = true;
+            } else {
+                this.elements.btnConfirm.disabled = false;
+            }
+        },
+        
+        selectTimeSlot(slot) {
+            if (this.state.selectedTimeSlotElement) {
+                this.state.selectedTimeSlotElement.classList.remove('selected');
+            }
+            slot.classList.add('selected');
+            this.state.selectedTimeSlotElement = slot;
+            this.state.selectedTimeSlotData = {
+                gate: slot.dataset.gate,
+                timeIndex: parseInt(slot.dataset.timeIndex, 10),
+                level: slot.dataset.level
+            };
+            this.updateSelectionSummary();
+            this.elements.selectionSummary.classList.add('visible');
+
+            if (slot.dataset.level === 'full') {
+                this.elements.btnConfirm.disabled = true;
+            } else {
+                this.elements.btnConfirm.disabled = false;
+            }
+        },
+        
+        updateSelectionSummary() {
+            if (!this.state.selectedDateStr || !this.state.selectedTimeSlotData) {
+                this.elements.selectionSummary.classList.remove('visible');
+                return;
+            }
+            
+            const parts = this.state.selectedDateStr.split('-');
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // JSの月は0-indexed
+            const day = parseInt(parts[2], 10);
+            const date = new Date(year, month, day);
+
+            const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+            const dateFmt = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日(${dayOfWeekStr})`;
+
+            const time = this.constants.timeStrings[this.state.selectedTimeSlotData.timeIndex];
+            const gate = this.state.selectedTimeSlotData.gate;
+            
+            this.elements.selectionSummary.innerHTML = `
+                来場日時: ${dateFmt} ${time}-<br>
+                枚数: 1枚<br>
+                【${gate}】
+            `;
+            this.elements.selectionSummary.classList.add('visible');
+        },
+        
+        confirmBooking() {
+            if (!this.state.selectedTimeSlotData || this.state.selectedTimeSlotData.level === 'full') {
+                console.warn('時間を選択してください、または選択された時間は予約できません。');
+                return;
+            }
+            
+            const crowdLevel = this.state.selectedTimeSlotData.level;
+            
+            let baseSuccessRates;
+            const { difficulty } = this.state;
+
+            if (difficulty === 'Easy') {
+                baseSuccessRates = {
+                    available: 0.98, // Easy (青): 98%
+                    congested: 0.90, // Easy (黄): 90%
+                    full: 0.05,      // (念のため設定)
+                };
+            } else if (difficulty === 'Normal') {
+                baseSuccessRates = {
+                    available: 0.75, // (デフォルト)
+                    congested: 0.20, // (デフォルト)
+                    full: 0.05,      // (デフォルト)
+                };
+            } else if (difficulty === 'Hard') {
+                baseSuccessRates = {
+                    available: 0.75, // (デフォルト)
+                    congested: 0.80, // Hard (黄): 80%
+                    full: 0.0001,    // (デフォルト)
+                };
+            } else {
+                // デフォルト (Normal相当)
+                baseSuccessRates = {
+                    available: 0.75,
+                    congested: 0.20,
+                    full: 0.05,
                 };
             }
-        };
+            
+            const baseRate = baseSuccessRates[crowdLevel] || 0;
+            // 時間経過による失敗確率を適用
+            const actualSuccessRate = Math.max(0, baseRate - this.state.failureIncrease);
+            
+            const success = Math.random() < actualSuccessRate;
+            
+            if (success) this.showSuccessPopup();
+            else this.showFailurePopup();
+        },
+        
+        showSuccessPopup() {
+            this.elements.successDetails.innerHTML = this.elements.selectionSummary.innerHTML;
+            this.elements.successPopup.classList.remove('hidden');
+            this.elements.overlay.classList.remove('hidden');
+        },
+        showFailurePopup() {
+            this.elements.failurePopup.classList.remove('hidden');
+            this.elements.overlay.classList.remove('hidden');
+        },
+        hidePopups() {
+            this.elements.successPopup.classList.add('hidden');
+            this.elements.failurePopup.classList.add('hidden');
+            this.elements.overlay.classList.add('hidden');
+        },
 
-        document.addEventListener('DOMContentLoaded', () => App.init());
-    </script>
+        // 画像のパスを読み込む
+        loadIconImagePaths() {
+            this.constants.iconImages = {
+                blue: 'blue.png',
+                yellow: 'yellow.png',
+                red: 'red.png'
+            };
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+```
+
 </body>
 </html>
